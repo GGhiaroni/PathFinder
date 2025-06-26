@@ -1,5 +1,7 @@
 "use client";
 
+import { ArrowDown } from "lucide-react";
+import BotaoEstilizado from "./BotaoEstilizado";
 import Logomarca from "./Logomarca";
 
 const Hero = () => {
@@ -17,23 +19,17 @@ const Hero = () => {
           Sua próxima aventura começa aqui.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold">
-            Criar Meu Perfil
-          </Button>
-          <input
-            type="text"
-            placeholder="Seu destino..."
-            className="px-6 py-3 rounded-full bg-white text-gray-700 w-64 shadow-md outline-none"
+          <BotaoEstilizado
+            titulo="Criar perfil"
+            estiloBotao="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
+          />
+          <BotaoEstilizado
+            titulo="Ver roteiros"
+            estiloBotao="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
           />
         </div>
       </div>
-      <h3 className="font-medium text-white font-poppins mt-5">
-        Monte seus roteiros personalizados com base em seus interesses e
-        orçamento.
-      </h3>
-      <h4 className="font-light text-white font-poppins mt-5">
-        Sua próxima aventura começa aqui!
-      </h4>
+      <ArrowDown className="absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-bounce text-white text-2xl opacity-60" />
     </section>
   );
 };
