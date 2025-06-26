@@ -12,6 +12,8 @@ module.exports = {
       },
       colors: {
         textoPreto: "hsl(var(--texto-preto))",
+        corAzulClaro: "var(--cor-azul-claro)",
+        corCinza: "var(--cor-cinza)",
       },
     },
   },

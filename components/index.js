@@ -1,3 +1,4 @@
+import ComoFunciona from "./ComoFunciona";
 import Hero from "./Hero";
 
-export { Hero };
+export { ComoFunciona, Hero };

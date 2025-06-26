@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDown } from "lucide-react";
+import Link from "next/link";
 import BotaoEstilizado from "./BotaoEstilizado";
 import Logomarca from "./Logomarca";
 
@@ -31,7 +32,9 @@ const Hero = () => {
           />
         </div>
       </div>
-      <ArrowDown className="absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-bounce text-white text-2xl opacity-60" />
+      <Link href="#como-funciona">
+        <ArrowDown className="absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-bounce text-white text-2xl opacity-60" />
+      </Link>
     </section>
   );
 };
