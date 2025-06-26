@@ -13,11 +13,12 @@ const Hero = () => {
 
       <div className="z-10">
         <Logomarca />
-        <p className="mt-4 text-lg text-white/80">
+        <h4 className="mt-4 text-lg text-white/80">
           Descubra roteiros personalizados baseados nos seus interesses.
-          <br />
+        </h4>
+        <h3 className="mt-4 text-lg text-white/80">
           Sua próxima aventura começa aqui.
-        </p>
+        </h3>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
           <BotaoEstilizado
             titulo="Criar perfil"
@@ -25,7 +26,8 @@ const Hero = () => {
           />
           <BotaoEstilizado
             titulo="Ver roteiros"
-            estiloBotao="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
+            estiloBotao="bg-white hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
+            estiloTexto="text-textoPreto hover:text-white"
           />
         </div>
       </div>

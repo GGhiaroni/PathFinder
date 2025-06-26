@@ -10,6 +10,9 @@ module.exports = {
         playfair: ["Playfair Display", "serif"],
         poppins: ["Poppins", "sans-serif"],
       },
+      colors: {
+        textoPreto: "hsl(var(--texto-preto))",
+      },
     },
   },
   plugins: [],

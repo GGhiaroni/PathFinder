@@ -11,6 +11,6 @@
   box-sizing: border-box;
 }
 
-.hero {
-  @apply flex-row;
+:root {
+  --texto-preto: 0 0% 13%;
 }
