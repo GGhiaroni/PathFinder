@@ -1,10 +1,19 @@
+"use client";
+
+import Logomarca from "./Logomarca";
+
 const Hero = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <h1>Bem-vindo</h1>
-      </section>
-    </div>
+    <section className="bg-black flex flex-col">
+      <Logomarca />
+      <h3 className="font-extrabold text-white font-poppins">
+        Monte seus roteiros personalizados com base em seus interesses e
+        orçamento.
+      </h3>
+      <h4 className="font-light text-white font-poppins">
+        Sua próxima aventura começa aqui!
+      </h4>
+    </section>
   );
 };
 
