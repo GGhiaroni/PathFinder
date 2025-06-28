@@ -2,6 +2,7 @@
 
 import { features, gradientes } from "@/constants";
 import { motion } from "framer-motion";
+import { CallToAction } from ".";
 
 const containerVariants = {
   hidden: {},
@@ -25,46 +26,55 @@ const itemVariants = {
 
 const ComoFunciona = () => {
   return (
-    <section
-      id="como-funciona"
-      className="min-h-screen bg-corAzulClaro flex flex-col items-center py-16 px-4"
-    >
-      <h2 className="text-textoPreto text-4xl sm:text-6xl font-extrabold mb-4">
-        Como funciona?
-      </h2>
-      <h4 className="text-xl font-light text-corCinza mb-12 text-center">
-        Três passos simples para uma viagem perfeita
-      </h4>
-
-      <motion.div
-        className="max-w-4xl md:max-w-6xl mx-auto grid gap-6 md:gap-12 sm:grid-cols-2 md:grid-cols-3"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+    <>
+      <section
+        id="como-funciona"
+        className="min-h-screen bg-corAzulClaro flex flex-col items-center py-16 px-4"
       >
-        {features.map((feature, index) => (
-          <motion.div
-            key={index}
-            variants={itemVariants}
-            className="bg-white rounded-2xl p-6 flex flex-col gap-4 shadow-md
+        <h2 className="text-textoPreto text-4xl sm:text-6xl font-extrabold mb-4">
+          Como funciona?
+        </h2>
+        <h4 className="text-xl font-light text-corCinza mb-12 text-center">
+          Três passos simples para uma viagem perfeita
+        </h4>
+
+        <motion.div
+          className="max-w-4xl md:max-w-6xl mx-auto grid gap-6 md:gap-12 sm:grid-cols-2 md:grid-cols-3"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              className="bg-white rounded-2xl p-6 flex flex-col gap-4 shadow-md
                        hover:scale-150 hover:shadow-xl"
-          >
-            <div
-              className={`w-10 h-10 rounded-xl bg-gradient-to-br ${
-                gradientes[feature.gradiente]
-              } flex items-center justify-center`}
             >
-              {feature.icone}
-            </div>
-            <h3 className="text-2xl md:text-2xl font-semibold text-textoPreto">
-              {feature.titulo}
-            </h3>
-            <p className="text-lg text-corCinza">{feature.descricao}</p>
-          </motion.div>
-        ))}
-      </motion.div>
-    </section>
+              <div
+                className={`w-10 h-10 rounded-xl bg-gradient-to-br ${
+                  gradientes[feature.gradiente]
+                } flex items-center justify-center`}
+              >
+                {feature.icone}
+              </div>
+              <h3 className="text-2xl md:text-2xl font-semibold text-textoPreto">
+                {feature.titulo}
+              </h3>
+              <p className="text-lg text-corCinza">{feature.descricao}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+      <CallToAction
+        titulo="Pronto para começar?"
+        estiloTitulo="text-2xl font-bold"
+        texto="Crie agora seu perfil personalizado e descubra roteiros únicos feitos especialmente para você!"
+        estiloTexto="text-lg"
+        textoBotao="Começar agora"
+      />
+    </>
   );
 };
 

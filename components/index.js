@@ -1,4 +1,5 @@
+import CallToAction from "./CallToAction";
 import ComoFunciona from "./ComoFunciona";
 import Hero from "./Hero";
 
-export { ComoFunciona, Hero };
+export { CallToAction, ComoFunciona, Hero };
