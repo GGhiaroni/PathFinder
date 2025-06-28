@@ -27,17 +27,17 @@ const ComoFunciona = () => {
   return (
     <section
       id="como-funciona"
-      className="min-h-screen bg-corAzulClaro flex flex-col items-center justify-center py-16 px-4"
+      className="min-h-screen bg-corAzulClaro flex flex-col items-center py-16 px-4"
     >
-      <h2 className="text-textoPreto text-[2.5rem] font-extrabold mb-4">
+      <h2 className="text-textoPreto text-4xl sm:text-6xl font-extrabold mb-4">
         Como funciona?
       </h2>
-      <h4 className="text-lg font-light text-corCinza mb-12 text-center">
+      <h4 className="text-xl font-light text-corCinza mb-12 text-center">
         Três passos simples para uma viagem perfeita
       </h4>
 
       <motion.div
-        className="max-w-4xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3"
+        className="max-w-4xl md:max-w-6xl mx-auto grid gap-6 md:gap-12 sm:grid-cols-2 md:grid-cols-3"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -48,7 +48,7 @@ const ComoFunciona = () => {
             key={index}
             variants={itemVariants}
             className="bg-white rounded-2xl p-6 flex flex-col gap-4 shadow-md
-                       hover:scale-105 hover:shadow-xl"
+                       hover:scale-150 hover:shadow-xl"
           >
             <div
               className={`w-10 h-10 rounded-xl bg-gradient-to-br ${
@@ -57,10 +57,10 @@ const ComoFunciona = () => {
             >
               {feature.icone}
             </div>
-            <h3 className="text-lg font-semibold text-textoPreto">
+            <h3 className="text-2xl md:text-2xl font-semibold text-textoPreto">
               {feature.titulo}
             </h3>
-            <p className="text-sm text-corCinza">{feature.descricao}</p>
+            <p className="text-lg text-corCinza">{feature.descricao}</p>
           </motion.div>
         ))}
       </motion.div>
