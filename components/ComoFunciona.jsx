@@ -68,6 +68,7 @@ const ComoFunciona = () => {
         </motion.div>
       </section>
       <CallToAction
+        href="/perfil"
         titulo="Pronto para começar?"
         estiloTitulo="text-2xl font-bold"
         texto="Crie agora seu perfil personalizado e descubra roteiros únicos feitos especialmente para você!"
