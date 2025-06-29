@@ -29,3 +29,21 @@ export const features = [
     gradiente: "orangeYellow",
   },
 ];
+
+export const interesses = [
+  "Praias",
+  "Montanhas",
+  "Cidades Históricas",
+  "Museus",
+  "Vida Noturna",
+  "Gastronomia",
+  "Aventura",
+  "Cultura",
+  "Natureza",
+  "Arquitetura",
+  "Arte",
+  "Compras",
+  "Esportes",
+  "Relaxamento",
+  "Fotografia",
+];
