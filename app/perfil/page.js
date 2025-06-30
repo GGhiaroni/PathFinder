@@ -48,6 +48,22 @@ const Perfil = () => {
             <span className="text-red-500 text-sm">{errors.nome.message}</span>
           )}
         </div>
+
+        <div className="flex flex-col gap-2 justify-start">
+          <label htmlFor="idade" className="font-medium text-textoPreto">
+            Idade <span className="text-red-700">*</span>
+          </label>
+          <input
+            id="idade"
+            placeholder="Seu nome"
+            className="border border-gray-300 rounded-md px-4 py-2"
+            type="number"
+            {...register("nome", { required: "Idade é obrigatória" })}
+          />
+          {errors.idade && (
+            <span className="text-red-500 text-sm">{errors.idade.message}</span>
+          )}
+        </div>
       </form>
     </section>
   );
