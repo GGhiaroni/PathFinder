@@ -4,6 +4,7 @@ import { interesses } from "@/constants";
 import { UserRound } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Perfil = () => {
   const {
@@ -25,14 +26,35 @@ const Perfil = () => {
     const arrayAtualDeInteresses = getValues("interesses") || [];
     const jaSelecionado = arrayAtualDeInteresses.includes(interesse);
 
+    if (!jaSelecionado && arrayAtualDeInteresses.length >= 3) {
+      toast.error("Você só pode selecionar até 3 interesses.");
+      return;
+    }
+
     const novoArray = jaSelecionado
       ? arrayAtualDeInteresses.filter((i) => i !== interesse)
-      : [arrayAtualDeInteresses, interesse];
+      : [...arrayAtualDeInteresses, interesse];
 
     setValue("interesses", novoArray, { shouldValidate: true });
   };
 
   const onSubmit = (data) => {
+    if (!data.nome) {
+      toast.error("O campo Nome é obrigatório.");
+      return;
+    }
+
+    if (!data.idade) {
+      toast.error("O campo Idade é obrigatório.");
+      return;
+    }
+
+    if (!data.interesses || data.interesses.length === 0) {
+      toast.error("Escolha pelo menos um interesse");
+      return;
+    }
+
+    toast.success("Perfil criado com sucesso!");
     console.log("Dados do Perfil: ", data);
   };
 

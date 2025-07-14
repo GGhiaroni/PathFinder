@@ -46,4 +46,5 @@ export const interesses = [
   "Esportes",
   "Relaxamento",
   "Fotografia",
+  "Luxo",
 ];
