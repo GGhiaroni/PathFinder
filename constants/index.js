@@ -33,7 +33,7 @@ export const features = [
 export const interesses = [
   "Praias",
   "Montanhas",
-  "Cidades Históricas",
+  "História",
   "Museus",
   "Vida Noturna",
   "Gastronomia",
