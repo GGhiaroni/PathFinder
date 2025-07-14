@@ -1,18 +1,46 @@
 "use client";
 
+import { interesses } from "@/constants";
 import { UserRound } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const Perfil = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
+    getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      interesses: [],
+    },
+  });
+
+  const interessesSelecionados = watch("interesses") || [];
+
+  const toggleInteresse = (interesse) => {
+    const arrayAtualDeInteresses = getValues("interesses") || [];
+    const jaSelecionado = arrayAtualDeInteresses.includes(interesse);
+
+    const novoArray = jaSelecionado
+      ? arrayAtualDeInteresses.filter((i) => i !== interesse)
+      : [arrayAtualDeInteresses, interesse];
+
+    setValue("interesses", novoArray, { shouldValidate: true });
+  };
 
   const onSubmit = (data) => {
     console.log("Dados do Perfil: ", data);
   };
+
+  useEffect(() => {
+    register("interesses", {
+      required: "Escolha pelo menos um interesse",
+    });
+  }, [register]);
 
   return (
     <section className="min-h-screen bg-gradient-to-r from-indigo-50 to-fuchsia-50">
@@ -58,12 +86,51 @@ const Perfil = () => {
             placeholder="Seu nome"
             className="border border-gray-300 rounded-md px-4 py-2"
             type="number"
-            {...register("nome", { required: "Idade é obrigatória" })}
+            {...register("idade", { required: "Idade é obrigatória" })}
           />
           {errors.idade && (
             <span className="text-red-500 text-sm">{errors.idade.message}</span>
           )}
         </div>
+
+        <div className="w-full">
+          <h3 className="text-2xl font-bold mb-4">
+            Seus Interesses <span className="text-red-700">*</span>
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {interesses.map((interesse) => {
+              const isSelected = interessesSelecionados.includes(interesse);
+              return (
+                <button
+                  type="button"
+                  key={interesse}
+                  onClick={() => toggleInteresse(interesse)}
+                  className={`rounded-md px-4 py-2 text-center font-medium transition-all
+            ${
+              isSelected
+                ? "bg-[#851F92] text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }
+          `}
+                >
+                  {interesse}
+                </button>
+              );
+            })}
+          </div>
+          {errors.interesses && (
+            <p className="text-red-500 text-sm mt-2">
+              {errors.interesses.message}
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="mt-6 bg-[#851F92] text-white px-6 py-2 rounded-md font-semibold hover:bg-[#6d1a78] transition"
+        >
+          Criar perfil
+        </button>
       </form>
     </section>
   );
