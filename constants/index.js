@@ -48,3 +48,26 @@ export const interesses = [
   "Fotografia",
   "Luxo",
 ];
+
+export const orcamento = [
+  {
+    titulo: "Econômico",
+    descricao: "até R$500,00/dia",
+    icone: "🤝",
+  },
+  {
+    titulo: "Moderado",
+    descricao: "até R$1.000,00/dia",
+    icone: "🤔",
+  },
+  {
+    titulo: "Confortável",
+    descricao: "até R$2.000,00/dia",
+    icone: "😎",
+  },
+  {
+    titulo: "Luxo",
+    descricao: "R$2.000,00/dia+",
+    icone: "💎",
+  },
+];

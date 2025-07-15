@@ -1,6 +1,6 @@
 "use client";
 
-import { interesses } from "@/constants";
+import { interesses, orcamento } from "@/constants";
 import { UserRound } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ const Perfil = () => {
   } = useForm({
     defaultValues: {
       interesses: [],
+      orcamento: "",
     },
   });
 
@@ -23,6 +24,12 @@ const Perfil = () => {
     control,
     name: "interesses",
     defaultValue: [],
+  });
+
+  const orcamentoSelecionado = useWatch({
+    control,
+    name: "orcamento",
+    defaultValue: null,
   });
 
   const toggleInteresse = (interesse) => {
@@ -38,6 +45,12 @@ const Perfil = () => {
       : [...interessesSelecionados, interesse];
 
     setValue("interesses", novoArray, { shouldValidate: true });
+  };
+
+  const toggleOrcamento = (orcamentoTitulo) => {
+    const novoValor =
+      orcamentoSelecionado === orcamentoTitulo ? "" : orcamentoTitulo;
+    setValue("orcamento", novoValor, { shouldValidate: true });
   };
 
   const onSubmit = (data) => {
@@ -60,7 +73,7 @@ const Perfil = () => {
     console.log("Dados do Perfil: ", data);
   };
 
-  const onError = (errors) => {
+  const onError = (data, errors) => {
     if (errors.nome) {
       toast.error("Nome é um campo obrigatório.");
       return;
@@ -73,6 +86,14 @@ const Perfil = () => {
       toast.error("Selecione pelo menos um interesse.");
       return;
     }
+
+    if (errors.orcamento) {
+      toast.error("Selecione uma opção de orçamento.");
+      return;
+    }
+
+    toast.success("Perfil criado com sucesso!");
+    console.log("Dados do Perfil: ", data);
   };
 
   return (
@@ -141,6 +162,47 @@ const Perfil = () => {
           `}
                 >
                   {interesse}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="w-full">
+          <h3 className="text-2xl font-bold mb-4 mt-4">
+            Orçamento <span className="text-red-700">*</span>
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {orcamento.map((opcao) => {
+              const isSelected = orcamentoSelecionado === opcao.titulo;
+              return (
+                <button
+                  type="button"
+                  key={opcao.titulo}
+                  onClick={() => toggleOrcamento(opcao.titulo)}
+                  className={`flex flex-col items-start gap-1 rounded-md px-4 py-3 text-left transition-all
+            ${
+              isSelected
+                ? "bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }
+          `}
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <span className="text-xl">{opcao.icone}</span>
+                    <span className="font-semibold text-base">
+                      {opcao.titulo}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-sm ${
+                      isSelected
+                        ? "text-white"
+                        : "text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {opcao.descricao}
+                  </span>
                 </button>
               );
             })}
