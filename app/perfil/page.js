@@ -54,26 +54,11 @@ const Perfil = () => {
   };
 
   const onSubmit = (data) => {
-    if (!data.nome) {
-      toast.error("O campo Nome é obrigatório.");
-      return;
-    }
-
-    if (!data.idade) {
-      toast.error("O campo Idade é obrigatório.");
-      return;
-    }
-
-    if (!data.interesses || data.interesses.length === 0) {
-      toast.error("Escolha pelo menos um interesse");
-      return;
-    }
-
     toast.success("Perfil criado com sucesso!");
     console.log("Dados do Perfil: ", data);
   };
 
-  const onError = (data, errors) => {
+  const onError = (errors) => {
     if (errors.nome) {
       toast.error("Nome é um campo obrigatório.");
       return;
@@ -91,9 +76,6 @@ const Perfil = () => {
       toast.error("Selecione uma opção de orçamento.");
       return;
     }
-
-    toast.success("Perfil criado com sucesso!");
-    console.log("Dados do Perfil: ", data);
   };
 
   return (
