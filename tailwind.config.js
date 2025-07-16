@@ -23,6 +23,18 @@ module.exports = {
         corAzulClaro: "var(--cor-azul-claro)",
         corCinza: "var(--cor-cinza)",
       },
+      animation: {
+        "gradient-y": "gradientY 5s ease infinite",
+      },
+      keyframes: {
+        gradientY: {
+          "0%, 100%": { backgroundPosition: "top" },
+          "50%": { backgroundPosition: "bottom" },
+        },
+      },
+      backgroundSize: {
+        "200%": "200% 200%",
+      },
     },
   },
   plugins: [],
