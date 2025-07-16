@@ -2,10 +2,13 @@
 
 import { interesses, orcamento } from "@/constants";
 import { UserRound } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 const Perfil = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -56,6 +59,8 @@ const Perfil = () => {
   const onSubmit = (data) => {
     toast.success("Perfil criado com sucesso!");
     console.log("Dados do Perfil: ", data);
+
+    router.push("/loading");
   };
 
   const onError = (errors) => {
