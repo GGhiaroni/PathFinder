@@ -1,6 +1,7 @@
 "use client";
 
 import { interesses, orcamento } from "@/constants";
+import perfilStore from "@/store/perfilStore";
 import { UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
@@ -59,6 +60,8 @@ const Perfil = () => {
   const onSubmit = (data) => {
     toast.success("Perfil criado com sucesso!");
     console.log("Dados do Perfil: ", data);
+
+    perfilStore.setPerfil(data);
 
     router.push("/loading");
   };
