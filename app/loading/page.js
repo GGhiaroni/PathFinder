@@ -1,7 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
-import { gerarRoteiroClient } from "@/utils/gemini";
+import { gerarRoteiroClient, sugerirDestinosClient } from "@/utils/gemini";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -10,34 +10,51 @@ const Loading = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchRoteiro = async () => {
+    const fetchContent = async () => {
       if (!perfilStore.nome) {
         router.push("/perfil");
         return;
       }
 
-      try {
-        const novoRoteiro = await gerarRoteiroClient({
-          nome: perfilStore.nome,
-          idade: perfilStore.idade,
-          interesses: perfilStore.interesses,
-          orcamento: perfilStore.orcamento,
-        });
-
-        perfilStore.setRoteiro(novoRoteiro);
-        router.push("/roteiro");
-      } catch (error) {
-        console.error("Erro ao gerar roteiro:", error);
-        toast.error("Erro ao gerar o roteiro. Tente novamente.");
-        router.push("/perfil");
+      if (perfilStore.destinoEscolhido) {
+        try {
+          const novoRoteiro = await gerarRoteiroClient({
+            nome: perfilStore.nome,
+            idade: perfilStore.idade,
+            interesses: perfilStore.interesses,
+            orcamento: perfilStore.orcamento,
+            destino: perfilStore.destinoEscolhido,
+          });
+          perfilStore.setRoteiro(novoRoteiro);
+          router.push("/roteiro");
+        } catch (error) {
+          console.error("Erro ao gerar roteiro específico:", error);
+          toast.error("Erro ao gerar o roteiro detalhado. Tente novamente.");
+          perfilStore.reset();
+          router.push("/perfil");
+        }
+      } else if (perfilStore.sugestoesDestino.length === 0) {
+        try {
+          const sugestoes = await sugerirDestinosClient({
+            nome: perfilStore.nome,
+            idade: perfilStore.idade,
+            interesses: perfilStore.interesses,
+            orcamento: perfilStore.orcamento,
+          });
+          perfilStore.setSugestoesDestino(sugestoes);
+          router.push("/sugerir-destinos");
+        } catch (error) {
+          console.error("Erro ao gerar sugestões de destino:", error);
+          toast.error("Erro ao sugerir destinos. Tente novamente.");
+          perfilStore.reset();
+          router.push("/perfil");
+        }
+      } else {
+        router.push("/sugerir-destinos");
       }
     };
 
-    if (!perfilStore.roteiro) {
-      fetchRoteiro();
-    } else {
-      router.push("/roteiro");
-    }
+    fetchContent();
   }, [router]);
 
   return (
@@ -47,7 +64,9 @@ const Loading = () => {
           animate-gradient-y bg-[length:200%_200%]"
     >
       <h1 className="text-4xl font-bold text-[#851F92]">
-        Gerando seu roteiro...
+        {perfilStore.destinoEscolhido
+          ? "Preparando seu roteiro..."
+          : "Gerando sugestões..."}
       </h1>
       <p className="text-xl text-gray-600 mt-2">
         Isso pode levar alguns segundos
