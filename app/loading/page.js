@@ -1,7 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
-import { gerarRoteiroClient } from "@/utils/openai";
+import { gerarRoteiroClient } from "@/utils/gemini";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
