@@ -1,11 +1,16 @@
 console.log(process.env.OPEN_API_KEY);
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPEN_API_KEY,
-});
+const API_KEY = process.env.GOOGLE_API_KEY;
+
+if (!API_KEY) {
+  console.error("GOOGLE_API_KEY não está nas variáveis de ambiente.");
+}
+
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function POST(req) {
   try {
@@ -25,17 +30,13 @@ export async function POST(req) {
       Dê sugestões de cidades, atividades diárias (manhã, tarde e noite), e pontos turísticos com base nos interesses e orçamento. Seja criativo, direto e empolgante.
     `;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.8,
-    });
-
-    const roteiro = completion.choices[0]?.message?.content;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const roteiro = response.text();
 
     return NextResponse.json({ roteiro });
   } catch (error) {
-    console.error("Erro ao gerar roteiro:", error);
+    console.error("Erro ao gerar roteiro com Gemini:", error);
     return NextResponse.json(
       { error: "Erro interno ao gerar roteiro" },
       { status: 500 }
