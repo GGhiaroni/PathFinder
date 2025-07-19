@@ -26,8 +26,9 @@ export async function POST(req) {
       - Idade: ${idade}
       - Interesses: ${interesses.join(", ")}
       - Orçamento: ${orcamento}
+      - Destino: ${destino}
     
-      Dê sugestões de cidades, atividades diárias (manhã, tarde e noite), e pontos turísticos com base nos interesses e orçamento. Seja criativo, direto e empolgante.
+      Dê sugestões de atividades diárias (manhã, tarde e noite), e pontos turísticos específicos para **${destino}** com base nos interesses e orçamento. Seja criativo, direto e empolgante. Considere um roteiro de 7 dias, mas foque em dar uma visão geral bem estruturada com dicas diárias.
     `;
 
     const result = await model.generateContent(prompt);
