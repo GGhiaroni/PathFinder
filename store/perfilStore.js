@@ -8,6 +8,7 @@ class PerfilStore {
   roteiro = "";
   sugestoesDestino = [];
   destinoEscolhido = "";
+  paisDestinoEscolhido = "";
 
   constructor() {
     makeAutoObservable(this);
@@ -29,7 +30,8 @@ class PerfilStore {
   }
 
   setDestinoEscolhido(destino) {
-    this.destinoEscolhido = destino;
+    this.destinoEscolhido = destino.nomeCidade;
+    this.paisDestinoEscolhido = destino.nomePais;
   }
 
   reset() {
@@ -40,6 +42,7 @@ class PerfilStore {
     this.roteiro = "";
     this.sugestoesDestino = [];
     this.destinoEscolhido = "";
+    this.paisDestinoEscolhido = "";
   }
 }
 

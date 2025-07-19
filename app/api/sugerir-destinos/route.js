@@ -20,7 +20,7 @@ export async function POST(req) {
     }
 
     const prompt = `Com base no seguinte perfil, sugira 6 destinos de viagem. Para cada destino, dê um breve motivo pelo qual ele seria interessante para o perfil, em UMA frase. Liste os destinos numerados e formatados como:
-          "1. [Nome do Destino] - [Breve motivo]."
+          "1. [Nome da Cidade], [País] - [Breve motivo]."
 
           Perfil:
           - Nome: ${nome}
@@ -46,8 +46,19 @@ export async function POST(req) {
       .filter((line) => line.trim().match(/^\d+\.\s/))
       .map((line) => {
         const parts = line.replace(/^\d+\.\s/, "").split(" - ");
+        const cidadeEPais = parts[0] ? parts[0].trim() : "";
+
+        const separacaoCidadeEPais = cidadeEPais.split(", ");
+        const cidade = separacaoCidadeEPais[0]
+          ? separacaoCidadeEPais[0].trim()
+          : "";
+        const pais = separacaoCidadeEPais[1]
+          ? separacaoCidadeEPais[1].trim()
+          : "";
+
         return {
-          nome: parts[0] ? parts[0].trim() : "",
+          nomeCidade: cidade,
+          nomePais: pais,
           motivo: parts[1] ? parts[1].trim() : "",
         };
       });
