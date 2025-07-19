@@ -28,8 +28,8 @@ const SugerirDestinos = observer(() => {
   }, [nome, sugestoesDestino, roteiro, router]);
 
   const handleEscolherDestino = (destino) => {
-    perfilStore.setDestinoEscolhido(destino.nome);
-    console.log("Destino escolhido: ", destino.nome);
+    perfilStore.setDestinoEscolhido(destino);
+    console.log("Destino escolhido: ", destino.nome, "País:", destino.nomePais);
     router.push("/loading");
   };
 
