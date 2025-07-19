@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextResponse } from "next/server";
 
 const API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -20,13 +21,13 @@ export async function POST(req) {
 
     const prompt = `Com base no seguinte perfil, sugira 6 destinos de viagem. Para cada destino, dê um breve motivo pelo qual ele seria interessante para o perfil, em UMA frase. Liste os destinos numerados e formatados como:
           "1. [Nome do Destino] - [Breve motivo]."
-      
+
           Perfil:
           - Nome: ${nome}
           - Idade: ${idade}
           - Interesses: ${interesses.join(", ")}
           - Orçamento: ${orcamento}
-      
+
           Exemplo de saída esperada:
           1. Paris, França - Ideal para quem ama arte e cultura com um toque romântico.
           2. Tóquio, Japão - Perfeita para explorar tecnologia, culinária única e tradições milenares.

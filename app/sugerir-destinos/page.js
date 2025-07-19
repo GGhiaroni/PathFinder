@@ -6,30 +6,26 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const SugestaoDeDestinos = observer(() => {
+const SugerirDestinos = observer(() => {
   const router = useRouter();
-
-  const { sugestoesDestino, perfil, setDestinoEscolhido, roteiro } =
-    perfilStore;
+  const { sugestoesDestino, nome, setDestinoEscolhido, roteiro } = perfilStore;
 
   useEffect(() => {
-    if (!perfil.nome) {
+    if (!nome) {
       router.push("/perfil");
       return;
     }
-
     if (roteiro) {
       router.push("/roteiro");
       return;
     }
-
-    if (sugestoesDestino.length === 0 && perfil.nome) {
+    if (sugestoesDestino.length === 0 && nome) {
       toast.error(
-        "Não foi possível gerar sugestões de destino. Por favor, tente novamente."
+        "Não foi possível gerar sugestões de destino. Tente novamente."
       );
       router.push("/perfil");
     }
-  }, [perfil, sugestoesDestino, roteiro, router]);
+  }, [nome, sugestoesDestino, roteiro, router]);
 
   const handleEscolherDestino = (destino) => {
     perfilStore.setDestinoEscolhido(destino.nome);
@@ -91,4 +87,4 @@ const SugestaoDeDestinos = observer(() => {
   );
 });
 
-export default SugestaoDeDestinos;
+export default SugerirDestinos;

@@ -2,11 +2,12 @@
 
 import perfilStore from "@/store/perfilStore";
 import { gerarRoteiroClient, sugerirDestinosClient } from "@/utils/gemini";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const Loading = () => {
+const Loading = observer(() => {
   const router = useRouter();
 
   useEffect(() => {
@@ -74,6 +75,6 @@ const Loading = () => {
       <div className="mt-8 h-12 w-12 border-t-4 border-[#851F92] border-opacity-50 rounded-full animate-spin"></div>
     </div>
   );
-};
+});
 
 export default Loading;

@@ -15,9 +15,9 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { nome, idade, interesses, orcamento } = body;
+    const { nome, idade, interesses, orcamento, destino } = body;
 
-    if (!nome || !idade || !interesses || !orcamento) {
+    if (!nome || !idade || !interesses || !orcamento || !destino) {
       return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
     }
 
