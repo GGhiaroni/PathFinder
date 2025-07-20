@@ -2,13 +2,53 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 const API_KEY = process.env.GOOGLE_API_KEY;
+const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 if (!API_KEY) {
   console.error("GOOGLE_API_KEY não está nas variáveis de ambiente!");
 }
 
+if (!UNSPLASH_ACCESS_KEY) {
+  console.error("UNSPLASH_ACCESS_KEY não está nas variáveis de ambiente!");
+}
+
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+async function fetchUnsplashImage(query) {
+  if (!UNSPLASH_ACCESS_KEY) {
+    console.warn(
+      "UNSPLASH_ACCESS_KEY não configurada. Retornando placeholder."
+    );
+    return "/placeholder-city.jpg";
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+        query
+      )}&per_page=1&client_id=${UNSPLASH_ACCESS_KEY}`
+    );
+
+    if (!response.ok) {
+      const erro = await response.json();
+      console.error(
+        `Erro na API do Unsplash: ${response.status} ${response.statusText}`,
+        erro
+      );
+      return "/placeholder-city.jpg";
+    }
+
+    const data = await response.json();
+    if (data.results && data.results.length > 0) {
+      return data.results[0].urls.small;
+    }
+  } catch (error) {
+    console.error(`Erro ao buscar imagem no Unsplash:`, error);
+  }
+
+  return "/placeholder-city.png";
+}
 
 export async function POST(req) {
   try {
@@ -65,9 +105,17 @@ export async function POST(req) {
         };
       });
 
-    return NextResponse.json({ sugestoes: sugestoesArray });
+    const sugestoesComImagensPromises = sugestoesArray.map(async (sugestao) => {
+      const query = `${sugestao.nomeCidade}, ${sugestao.nomePais}`;
+      const urlImagem = await fetchUnsplashImage(query);
+      return { ...sugestao, imagemUrl: urlImagem };
+    });
+
+    const sugestoesComImagens = await Promise.all(sugestoesComImagensPromises);
+
+    return NextResponse.json({ sugestoes: sugestoesComImagens });
   } catch (error) {
-    console.error("Erro ao sugerir destinos com Gemini:", error);
+    console.error("Erro ao sugerir destinos com Gemini ou Unsplash:", error);
     return NextResponse.json(
       { error: "Erro interno ao sugerir destinos" },
       { status: 500 }
