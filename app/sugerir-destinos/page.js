@@ -1,6 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
+import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -64,7 +65,12 @@ const SugerirDestinos = observer(() => {
                        flex flex-col items-start text-left border-2 border-transparent hover:border-[#851F92]"
           >
             <h2 className="text-2xl font-bold text-[#851F92] mb-2">
-              {destino.nome}
+              {destino.nomeCidade}
+              {destino.nomePais && (
+                <span className="ml-2 text-3xl">
+                  {selecionarBandeiraPais(destino.nomePais)}{" "}
+                </span>
+              )}
             </h2>
             <p className="text-gray-700 text-base flex-grow">
               {destino.motivo}

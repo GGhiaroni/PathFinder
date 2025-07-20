@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Roteiro = observer(() => {
   const router = useRouter();
 
-  const { roteiro, nome } = perfilStore;
+  const { roteiro, nome, destinoEscolhido, paisDestinoEscolhido } = perfilStore;
 
   useEffect(() => {
     if (!roteiro || !nome) {
@@ -28,7 +28,12 @@ const Roteiro = observer(() => {
     <section className="min-h-screen bg-gradient-to-r from-indigo-50 to-fuchsia-100 p-6">
       <div className="bg-white mx-auto max-w-4xl rounded-lg py-8 px-6 shadow-md">
         <h1 className="text-4xl font-extrabold text-[#851F92] mb-6 text-center">
-          Seu Roteiro Personalizado!
+          Seu Roteiro Personalizado para {destinoEscolhido}!
+          {paisDestinoEscolhido && (
+            <span className="ml-4 text-5xl">
+              {selecionarBandeiraPais(paisDestinoEscolhido)}
+            </span>
+          )}
         </h1>
         <div className="border-t border-gray-200 pt-6 mt-6">
           <pre className="bg-gray-50 p-6 rounded-lg whitespace-pre-wrap text-gray-800 leading-relaxed text-base">

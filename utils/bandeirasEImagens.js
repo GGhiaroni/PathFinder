@@ -65,6 +65,7 @@ export const emojisBandeirasPaises = {
   Eslovênia: "🇸🇮",
   Espanha: "🇪🇸",
   Essuatíni: "🇸🇿",
+  "Estados Unidos": "🇺🇸",
   Estônia: "🇪🇪",
   Etiópia: "🇪🇹",
   Fiji: "🇫🇯",
@@ -228,5 +229,5 @@ export const emojisBandeirasPaises = {
 };
 
 export const selecionarBandeiraPais = (pais) => {
-  return emojisBandeirasPaises[pais] || "erro ao selecionar emoji";
+  return emojisBandeirasPaises[pais] || "✨";
 };

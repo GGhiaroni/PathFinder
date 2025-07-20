@@ -22,6 +22,8 @@ export async function POST(req) {
     const prompt = `Com base no seguinte perfil, sugira 6 destinos de viagem. Para cada destino, dê um breve motivo pelo qual ele seria interessante para o perfil, em UMA frase. Liste os destinos numerados e formatados como:
           "1. [Nome da Cidade], [País] - [Breve motivo]."
 
+          IMPORTANTE: O '[Nome da Cidade]' deve conter APENAS o nome principal da cidade, sem detalhes adicionais, qualificadores ou informações entre parênteses sobre regiões específicas (ex: não inclua "especialmente Ha Long Bay e Sapa"). O '[País]' deve ser apenas o nome do país.
+
           Perfil:
           - Nome: ${nome}
           - Idade: ${idade}
