@@ -3,6 +3,7 @@
 import perfilStore from "@/store/perfilStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import { observer } from "mobx-react-lite";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -30,7 +31,12 @@ const SugerirDestinos = observer(() => {
 
   const handleEscolherDestino = (destino) => {
     perfilStore.setDestinoEscolhido(destino);
-    console.log("Destino escolhido: ", destino.nome, "País:", destino.nomePais);
+    console.log(
+      "Destino escolhido: ",
+      destino.nomeCidade,
+      "País:",
+      destino.nomePais
+    );
     router.push("/loading");
   };
 
@@ -64,18 +70,31 @@ const SugerirDestinos = observer(() => {
             className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
                        flex flex-col items-start text-left border-2 border-transparent hover:border-[#851F92]"
           >
-            <h2 className="text-2xl font-bold text-[#851F92] mb-2">
-              {destino.nomeCidade}
-              {destino.nomePais && (
-                <span className="ml-2 text-3xl">
-                  {selecionarBandeiraPais(destino.nomePais)}{" "}
-                </span>
-              )}
-            </h2>
-            <p className="text-gray-700 text-base flex-grow">
-              {destino.motivo}
-            </p>
-            <span className="mt-4 text-[#851F92] font-semibold text-sm">
+            <div className="relative w-full h-48">
+              <Image
+                src={destino.imagemUrl}
+                alt={`Vista de ${destino.nomeCidade}`}
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={index < 3}
+              />
+            </div>
+
+            <div className="p-6 flex-grow">
+              <h2 className="text-2xl font-bold text-[#851F92] mb-2 flex items-center">
+                {destino.nomeCidade}
+                {destino.nomePais && (
+                  <span className="ml-2 text-3xl">
+                    {selecionarBandeiraPais(destino.nomePais)}
+                  </span>
+                )}
+              </h2>
+              <p className="text-gray-700 text-base flex-grow">
+                {destino.motivo}
+              </p>
+            </div>
+            <span className="mt-auto p-6 pt-0 text-[#851F92] font-semibold text-sm">
               Clique para ver o roteiro
             </span>
           </button>

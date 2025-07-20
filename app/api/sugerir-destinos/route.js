@@ -47,7 +47,7 @@ async function fetchUnsplashImage(query) {
     console.error(`Erro ao buscar imagem no Unsplash:`, error);
   }
 
-  return "/placeholder-city.png";
+  return "/placeholder-city.jpg";
 }
 
 export async function POST(req) {
