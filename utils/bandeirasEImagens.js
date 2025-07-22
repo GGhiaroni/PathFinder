@@ -102,6 +102,7 @@ export const emojisBandeirasPaises = {
   "Ilhas Virgens Americanas": "🇻🇮",
   Índia: "🇮🇳",
   Indonésia: "🇮🇩",
+  Inglaterra: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
   Irã: "🇮🇷",
   Iraque: "🇮🇶",
   Irlanda: "🇮🇪",

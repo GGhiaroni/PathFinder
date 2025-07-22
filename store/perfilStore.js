@@ -9,6 +9,7 @@ class PerfilStore {
   sugestoesDestino = [];
   destinoEscolhido = "";
   paisDestinoEscolhido = "";
+  roteirosSalvos = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -34,6 +35,27 @@ class PerfilStore {
     this.paisDestinoEscolhido = destino.nomePais;
   }
 
+  addSalvarRoteiro(roteiro) {
+    const now = new Date();
+    const idRoteiro = `${roteiro.destino.nomeCidade}-${now.getTime()}`;
+
+    const roteiroJaSalvo = this.roteirosSalvos.some(
+      (r) => r.roteiroText === roteiro.roteiroText
+    );
+
+    if (!roteiroJaSalvo) {
+      this.roteirosSalvos.push({
+        id: idRoteiro,
+        salvoEm: now.toLocaleString(),
+        ...roteiro,
+      });
+      return true;
+    }
+
+    console.log("Esse roteiro já foi salvo.");
+    return false;
+  }
+
   reset() {
     this.nome = "";
     this.idade = "";
@@ -43,6 +65,7 @@ class PerfilStore {
     this.sugestoesDestino = [];
     this.destinoEscolhido = "";
     this.paisDestinoEscolhido = "";
+    this.roteirosSalvos = [];
   }
 }
 

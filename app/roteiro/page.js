@@ -1,6 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
+import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
