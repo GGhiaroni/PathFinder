@@ -1,6 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
+import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import { Calendar, Home, MapPin, PlusCircle, Trash2 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
@@ -69,9 +70,12 @@ const MeusRoteiros = observer(() => {
                 <div>
                   <h2 className="text-xl font-bold text-[#851F92] mb-2 flex items-center">
                     <MapPin size={24} className="mr-2 text-purple-700" />
-                    {roteiroItem.destino.nomeCidade}
-                    {/* Opcional: mostrar a bandeira se tiver a lógica aqui também */}
-                    {/* {selecionarBandeiraPais(roteiroItem.destino.nomePais)} */}
+                    <div className="flex justify-center gap-2">
+                      <p>{roteiroItem.destino.nomeCidade}</p>
+                      <p>
+                        {selecionarBandeiraPais(roteiroItem.destino.nomePais)}
+                      </p>
+                    </div>
                   </h2>
                   <p className="text-gray-600 text-sm mb-4">
                     Salvo em: {roteiroItem.salvoEm}
