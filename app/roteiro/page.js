@@ -2,10 +2,18 @@
 
 import perfilStore from "@/store/perfilStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
-import { AlarmClock, Calendar, Info, PlusCircle, Save } from "lucide-react";
+import {
+  AlarmClock,
+  Calendar,
+  Info,
+  MapPin,
+  PlusCircle,
+  Save,
+} from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Roteiro = observer(() => {
   const router = useRouter();
@@ -15,7 +23,7 @@ const Roteiro = observer(() => {
     nome,
     destinoEscolhido,
     paisDestinoEscolhido,
-    addSalvarRoteiro,
+    addSavedRoteiro,
   } = perfilStore;
 
   const [parsedRoteiro, setParsedRoteiro] = useState(null);
@@ -94,7 +102,7 @@ const Roteiro = observer(() => {
   }, [roteiro, nome, router, destinoEscolhido, parseRoteiroContent]);
 
   const handleSalvarRoteiro = () => {
-    const salvar = addSalvarRoteiro({
+    const salvo = addSavedRoteiro({
       roteiroText: roteiro,
       destino: {
         nomeCidade: destinoEscolhido,
@@ -103,7 +111,7 @@ const Roteiro = observer(() => {
       nomePerfil: nome,
     });
 
-    if (salvar) {
+    if (salvo) {
       toast.success("Roteiro salvo com sucesso!");
       setRoteiroJaSalvo(true);
     } else {
@@ -113,86 +121,100 @@ const Roteiro = observer(() => {
 
   if (!parsedRoteiro) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-50 to-fuchsia-100">
-        <p className="text-xl text-gray-600">
-          Preparando seu roteiro de viagem...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-fuchsia-100 text-gray-700 p-6">
+        <div className="animate-spin-slow text-[#851F92] mb-4">
+          <MapPin size={48} />
+        </div>
+        <p className="text-2xl font-semibold mb-2">
+          Organizando sua aventura...
+        </p>
+        <p className="text-lg text-center">
+          Estamos preparando um roteiro exclusivo para você!
         </p>
       </div>
     );
   }
 
   return (
-    <section className="min-h-screen bg-gradient-to-r from-indigo-50 to-fuchsia-100 py-10 px-8">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-xl">
-        <h1 className="text-4xl font-extrabold text-[#851F92] mb-6 text-center flex items-center justify-center">
-          Seu Roteiro Personalizado para {destinoEscolhido}!
-          {paisDestinoEscolhido && (
-            <span className="ml-4 text-5xl">
-              {selecionarBandeiraPais(paisDestinoEscolhido)}
+    <section className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-fuchsia-100 py-12 px-4 sm:px-6 lg:px-8 animate-fadeInScale">
+      <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-2xl border border-purple-100">
+        <div className="text-center mb-10 pb-6 border-b border-purple-100">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#851F92] leading-tight mb-4 flex flex-col sm:flex-row items-center justify-center">
+            <span>Seu Roteiro Personalizado para</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-600 ml-0 sm:ml-3 mt-2 sm:mt-0">
+              {destinoEscolhido}!
             </span>
+            {paisDestinoEscolhido && (
+              <span className="ml-0 sm:ml-4 mt-2 sm:mt-0 text-5xl sm:text-6xl animate-pulse-slow">
+                {selecionarBandeiraPais(paisDestinoEscolhido)}
+              </span>
+            )}
+          </h1>
+
+          {parsedRoteiro.mainTitle && (
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
+              {parsedRoteiro.mainTitle}
+            </h2>
           )}
-        </h1>
 
-        {parsedRoteiro.mainTitle && (
-          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
-            {parsedRoteiro.mainTitle}
-          </h2>
-        )}
+          {parsedRoteiro.introDescription && (
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              {parsedRoteiro.introDescription}
+            </p>
+          )}
+        </div>
 
-        {parsedRoteiro.introDescription && (
-          <p className="text-lg text-gray-600 mb-8 text-center leading-relaxed">
-            {parsedRoteiro.introDescription}
-          </p>
-        )}
-
-        <div className="flex justify-center gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
           <button
             onClick={handleSalvarRoteiro}
             disabled={roteiroJaSalvo}
-            className={`flex items-center px-6 py-3 rounded-full font-semibold shadow-md transition-all duration-300
+            className={`flex items-center justify-center px-8 py-3 rounded-full font-semibold text-lg shadow-lg btn-hover-scale
                        ${
                          roteiroJaSalvo
-                           ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                           : "bg-[#851F92] text-white hover:bg-[#6a1977]"
+                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                           : "bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:from-purple-700 hover:to-fuchsia-700"
                        }`}
           >
-            <Save size={20} className="mr-2" />
+            <Save size={22} className="mr-2" />
             {roteiroJaSalvo ? "Roteiro Salvo!" : "Salvar Roteiro"}
           </button>
           <button
             onClick={() => router.push("/perfil")}
-            className="flex items-center bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-300 transition-all shadow-md"
+            className="flex items-center justify-center bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors shadow-lg btn-hover-scale"
           >
-            <PlusCircle size={20} className="mr-2" />
+            <PlusCircle size={22} className="mr-2" />
             Criar Novo Roteiro
           </button>
         </div>
 
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {parsedRoteiro.days.map((day, dayIndex) => (
             <div
               key={dayIndex}
-              className="bg-purple-50 p-6 rounded-lg shadow-sm border border-purple-100"
+              className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col animate-slideInUp"
+              style={{ animationDelay: `${dayIndex * 0.1}s` }}
             >
-              <h3 className="text-2xl font-bold text-[#851F92] mb-4 flex items-center">
-                <Calendar size={24} className="mr-3 text-purple-700" />
+              <h3 className="text-2xl font-bold text-[#851F92] mb-5 pb-3 border-b border-purple-200 flex items-center">
+                <Calendar size={28} className="mr-3 text-purple-700" />
                 {day.title}
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-4 flex-grow">
                 {day.activities.map((activity, activityIndex) => (
                   <li
                     key={activityIndex}
-                    className="flex items-start text-gray-700"
+                    className="flex items-start text-gray-700 p-3 rounded-lg list-item-hover-bg"
                   >
                     <AlarmClock
-                      size={18}
-                      className="flex-shrink-0 mr-3 mt-1 text-gray-500"
+                      size={20}
+                      className="flex-shrink-0 mr-4 mt-1 text-gray-500"
                     />
                     <div>
-                      <strong className="text-gray-800">
-                        {activity.time}:
-                      </strong>{" "}
-                      {activity.description}
+                      <strong className="text-gray-900 text-lg block">
+                        {activity.time}
+                      </strong>
+                      <p className="text-base leading-relaxed">
+                        {activity.description}
+                      </p>
                     </div>
                   </li>
                 ))}
@@ -202,14 +224,25 @@ const Roteiro = observer(() => {
         </div>
 
         {parsedRoteiro.tips.length > 0 && (
-          <div className="mt-10 bg-blue-50 p-6 rounded-lg shadow-sm border border-blue-100">
-            <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center">
-              <Info size={24} className="mr-3 text-blue-800" />
+          <div
+            className="mt-12 bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 animate-slideInUp"
+            style={{
+              animationDelay: `${parsedRoteiro.days.length * 0.1 + 0.2}s`,
+            }}
+          >
+            {" "}
+            <h3 className="text-2xl font-bold text-blue-700 mb-6 pb-3 border-b border-blue-200 flex items-center">
+              <Info size={28} className="mr-3 text-blue-800" />
               Dicas Adicionais
             </h3>
-            <ul className="list-disc pl-5 space-y-2 text-gray-700">
+            <ul className="list-none pl-0 space-y-3 text-gray-700">
               {parsedRoteiro.tips.map((tip, index) => (
-                <li key={index}>{tip}</li>
+                <li key={index} className="flex items-start">
+                  <span className="text-blue-600 mr-3 text-xl leading-none">
+                    &bull;
+                  </span>{" "}
+                  <p className="text-base leading-relaxed">{tip}</p>
+                </li>
               ))}
             </ul>
           </div>
