@@ -66,6 +66,7 @@ export const emojisBandeirasPaises = {
   Espanha: "🇪🇸",
   Essuatíni: "🇸🇿",
   "Estados Unidos": "🇺🇸",
+  EUA: "🇺🇸",
   Estônia: "🇪🇪",
   Etiópia: "🇪🇹",
   Fiji: "🇫🇯",

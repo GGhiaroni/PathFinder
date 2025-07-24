@@ -13,6 +13,7 @@ class PerfilStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.addSalvarRoteiro = this.addSalvarRoteiro.bind(this);
   }
 
   setPerfil({ nome, idade, interesses, orcamento }) {
@@ -35,7 +36,7 @@ class PerfilStore {
     this.paisDestinoEscolhido = destino.nomePais;
   }
 
-  addSalvarRoteiro(roteiro) {
+  addSalvarRoteiro = (roteiro) => {
     const now = new Date();
     const idRoteiro = `${roteiro.destino.nomeCidade}-${now.getTime()}`;
 
@@ -54,7 +55,7 @@ class PerfilStore {
 
     console.log("Esse roteiro já foi salvo.");
     return false;
-  }
+  };
 
   reset() {
     this.nome = "";

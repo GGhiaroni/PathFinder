@@ -18,13 +18,7 @@ import { toast } from "sonner";
 const Roteiro = observer(() => {
   const router = useRouter();
 
-  const {
-    roteiro,
-    nome,
-    destinoEscolhido,
-    paisDestinoEscolhido,
-    addSavedRoteiro,
-  } = perfilStore;
+  const { roteiro, nome, destinoEscolhido, paisDestinoEscolhido } = perfilStore;
 
   const [parsedRoteiro, setParsedRoteiro] = useState(null);
   const [roteiroJaSalvo, setRoteiroJaSalvo] = useState(false);
@@ -122,7 +116,7 @@ const Roteiro = observer(() => {
   }, [roteiro, nome, router, destinoEscolhido, parseRoteiroContent]);
 
   const handleSalvarRoteiro = () => {
-    const salvo = addSavedRoteiro({
+    const salvo = perfilStore.addSalvarRoteiro({
       roteiroText: roteiro,
       destino: {
         nomeCidade: destinoEscolhido,
