@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 const MeusRoteiros = observer(() => {
   const router = useRouter();
-  const { roteirosSalvos } = perfilStore;
+  const { roteirosSalvos, removerRoteiroSalvo } = perfilStore;
 
   const [loading, setLoading] = useState(true);
 
@@ -19,10 +19,8 @@ const MeusRoteiros = observer(() => {
   }, []);
 
   const handleRemoverRoteiro = (id) => {
-    const novoArrayRoteirosSalvos = perfilStore.roteirosSalvos.filter(
-      (r) => r.idRoteiro !== id
-    );
-    perfilStore.roteirosSalvos.push(novoArrayRoteirosSalvos);
+    removerRoteiroSalvo(id);
+    toast.success("Roteiro removido com sucesso!");
   };
 
   if (loading) {
