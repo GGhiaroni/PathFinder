@@ -32,7 +32,8 @@ const Roteiro = observer(() => {
   const parseRoteiroContent = useCallback((markdownText) => {
     if (!markdownText) return null;
 
-    const sections = markdownText.split("\n\n");
+    const lines = markdownText.split("\n").filter((line) => line.trim() !== "");
+
     let parsed = {
       mainTitle: "",
       introDescription: "",
@@ -43,46 +44,64 @@ const Roteiro = observer(() => {
     let currentDay = null;
     let inTipsSection = false;
 
-    for (const section of sections) {
-      const trimmedSection = section.trim();
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
 
-      if (trimmedSection.startsWith("## ")) {
-        parsed.mainTitle = trimmedSection.replace("## ", "").trim();
+      if (line.startsWith("## ")) {
+        parsed.mainTitle = line.replace("## ", "").trim();
         inTipsSection = false;
-      } else if (trimmedSection.startsWith("**Este roteiro foca")) {
-        parsed.introDescription = trimmedSection.replace(/\*\*/g, "").trim();
+      } else if (line.startsWith("**Este roteiro foca")) {
+        parsed.introDescription = line.replace(/\*\*/g, "").trim();
         inTipsSection = false;
-      } else if (trimmedSection.startsWith("**Dia ")) {
+      } else if (line.startsWith("**Dia ")) {
         if (currentDay) {
           parsed.days.push(currentDay);
         }
+
+        let dayTitle = line.replace(/\*\*/g, "").trim();
+
         currentDay = {
-          title: trimmedSection.replace(/\*\*/g, "").trim(),
+          title: dayTitle,
           activities: [],
         };
         inTipsSection = false;
-      } else if (trimmedSection.startsWith("**Dicas Adicionais:**")) {
+      } else if (line.startsWith("**Dicas Adicionais:**")) {
         if (currentDay) {
           parsed.days.push(currentDay);
           currentDay = null;
         }
         inTipsSection = true;
-      } else if (trimmedSection.startsWith("* ")) {
+      } else if (line.startsWith("* ")) {
         if (inTipsSection) {
-          parsed.tips.push(trimmedSection.replace("* ", "").trim());
+          parsed.tips.push(line.replace("* ", "").trim());
         } else if (currentDay) {
-          const activityLine = trimmedSection.replace("* ", "");
+          const activityLine = line.replace("* ", "");
+
           const match = activityLine.match(/\*\*(.*?)\*\*:\s*(.*)/);
           if (match && match[1] && match[2]) {
             currentDay.activities.push({
               time: match[1].trim(),
-              description: match[2].trim(),
+              description: match[2].replace(/\*\*/g, "").trim(),
             });
           } else {
-            currentDay.activities.push({
-              time: "Atividade",
-              description: activityLine.trim(),
-            });
+            const firstColonIndex = activityLine.indexOf(":");
+            if (firstColonIndex !== -1) {
+              currentDay.activities.push({
+                time: activityLine
+                  .substring(0, firstColonIndex)
+                  .replace(/\*\*/g, "")
+                  .trim(),
+                description: activityLine
+                  .substring(firstColonIndex + 1)
+                  .replace(/\*\*/g, "")
+                  .trim(),
+              });
+            } else {
+              currentDay.activities.push({
+                time: "Atividade",
+                description: activityLine.replace(/\*\*/g, "").trim(),
+              });
+            }
           }
         }
       }
@@ -98,7 +117,8 @@ const Roteiro = observer(() => {
       router.push("/perfil");
       return;
     }
-    setParsedRoteiro(parseRoteiroContent(roteiro));
+    const parsed = parseRoteiroContent(roteiro);
+    setParsedRoteiro(parsed);
   }, [roteiro, nome, router, destinoEscolhido, parseRoteiroContent]);
 
   const handleSalvarRoteiro = () => {
@@ -194,28 +214,48 @@ const Roteiro = observer(() => {
               className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col animate-slideInUp"
               style={{ animationDelay: `${dayIndex * 0.1}s` }}
             >
-              <h3 className="text-2xl font-bold text-[#851F92] mb-5 pb-3 border-b border-purple-200 flex items-center">
-                <Calendar size={28} className="mr-3 text-purple-700" />
-                {day.title}
+              <h3 className="text-2xl font-bold text-[#851F92] mb-1 flex justify-center">
+                <Calendar
+                  size={25}
+                  className="mr-3 text-purple-700 flex-shrink-0"
+                />
+                <span className="leading-tight">
+                  {/* Renderiza o título do dia e insere <br /> após o primeiro ':' */}
+                  {day.title.split(":").map((part, idx, arr) => (
+                    <span key={idx}>
+                      {part.trim()}
+                      {idx === 0 && arr.length > 1 && <br />}{" "}
+                      {/* Adiciona <br> após a primeira parte se houver mais de uma */}
+                    </span>
+                  ))}
+                </span>
               </h3>
-              <ul className="space-y-4 flex-grow">
+
+              {/* O Subtítulo do dia NÃO é mais um campo separado no parser
+                  mas sim a segunda parte do day.title, renderizada com <br>
+                  Portanto, este bloco é removido ou comentado
+              */}
+              {/* {day.intro && (
+                <p className="text-lg text-gray-700 mb-5 leading-relaxed pl-12 -mt-1">
+                  {day.intro}
+                </p>
+              )} */}
+
+              <ul className="space-y-4 flex-grow mt-4">
+                {" "}
+                {/* Adicionado mt-4 para espaçamento após o título completo */}
                 {day.activities.map((activity, activityIndex) => (
                   <li
                     key={activityIndex}
-                    className="flex items-start text-gray-700 p-3 rounded-lg list-item-hover-bg"
+                    className="text-gray-700 p-3 rounded-lg list-item-hover-bg"
                   >
-                    <AlarmClock
-                      size={20}
-                      className="flex-shrink-0 mr-4 mt-1 text-gray-500"
-                    />
-                    <div>
-                      <strong className="text-gray-900 text-lg block">
-                        {activity.time}
-                      </strong>
-                      <p className="text-base leading-relaxed">
-                        {activity.description}
-                      </p>
-                    </div>
+                    <strong className="text-gray-900 text-lg flex items-center mb-1">
+                      <AlarmClock size={18} className="mr-2 text-gray-500" />
+                      {activity.time}
+                    </strong>
+                    <p className="text-base leading-relaxed pl-7">
+                      {activity.description}
+                    </p>
                   </li>
                 ))}
               </ul>
