@@ -19,7 +19,10 @@ const MeusRoteiros = observer(() => {
   }, []);
 
   const handleRemoverRoteiro = (id) => {
-    toast.info("Funcionalidade de remover roteiro não implementada ainda.");
+    const novoArrayRoteirosSalvos = perfilStore.roteirosSalvos.filter(
+      (r) => r.idRoteiro !== id
+    );
+    perfilStore.roteirosSalvos.push(novoArrayRoteirosSalvos);
   };
 
   if (loading) {

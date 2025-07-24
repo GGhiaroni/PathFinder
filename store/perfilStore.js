@@ -57,6 +57,13 @@ class PerfilStore {
     return false;
   };
 
+  removerRoteiroSalvo = (id) => {
+    this.roteirosSalvos = this.roteirosSalvos.filter(
+      (roteiro) => roteiro.id !== id
+    );
+    console.log(`Roteiro com id ${id} removido.`);
+  };
+
   reset() {
     this.nome = "";
     this.idade = "";
