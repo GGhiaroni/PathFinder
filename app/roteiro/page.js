@@ -275,6 +275,24 @@ const Roteiro = observer(() => {
             </ul>
           </div>
         )}
+
+        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+          <button
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors shadow-lg btn-hover-scale"
+          >
+            <MapPin size={22} className="mr-2" />
+            Voltar para a Home
+          </button>
+
+          <button
+            onClick={() => router.push("/meus-roteiros")}
+            className="flex items-center justify-center bg-purple-100 text-purple-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-purple-200 transition-colors shadow-lg btn-hover-scale"
+          >
+            <Save size={22} className="mr-2" />
+            Ver Meus Roteiros Salvos
+          </button>
+        </div>
       </div>
     </section>
   );
