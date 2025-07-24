@@ -214,36 +214,30 @@ const Roteiro = observer(() => {
               className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col animate-slideInUp"
               style={{ animationDelay: `${dayIndex * 0.1}s` }}
             >
-              <h3 className="text-2xl font-bold text-[#851F92] mb-1 flex justify-center">
+              <h3 className="text-2xl font-bold text-[#851F92] mb-1 flex justify-center items-start">
                 <Calendar
-                  size={25}
+                  size={40}
                   className="mr-3 text-purple-700 flex-shrink-0"
                 />
-                <span className="leading-tight">
-                  {/* Renderiza o título do dia e insere <br /> após o primeiro ':' */}
+                <span className="leading-tight flex flex-col">
                   {day.title.split(":").map((part, idx, arr) => (
-                    <span key={idx}>
-                      {part.trim()}
-                      {idx === 0 && arr.length > 1 && <br />}{" "}
-                      {/* Adiciona <br> após a primeira parte se houver mais de uma */}
+                    <span
+                      key={idx}
+                      className={
+                        idx === 0
+                          ? "text-3xl font-extrabold"
+                          : "text-lg font-semibold -mt-1"
+                      }
+                    >
+                      {" "}
+                      {part.trim()}{" "}
                     </span>
                   ))}
                 </span>
               </h3>
 
-              {/* O Subtítulo do dia NÃO é mais um campo separado no parser
-                  mas sim a segunda parte do day.title, renderizada com <br>
-                  Portanto, este bloco é removido ou comentado
-              */}
-              {/* {day.intro && (
-                <p className="text-lg text-gray-700 mb-5 leading-relaxed pl-12 -mt-1">
-                  {day.intro}
-                </p>
-              )} */}
-
               <ul className="space-y-4 flex-grow mt-4">
                 {" "}
-                {/* Adicionado mt-4 para espaçamento após o título completo */}
                 {day.activities.map((activity, activityIndex) => (
                   <li
                     key={activityIndex}
