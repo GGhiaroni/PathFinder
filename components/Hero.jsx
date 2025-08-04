@@ -22,7 +22,7 @@ const Hero = () => {
         </h3>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
           <BotaoEstilizado
-            titulo="Criar perfil"
+            titulo="Criar conta"
             estiloBotao="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
           />
           <BotaoEstilizado
