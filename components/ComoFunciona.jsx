@@ -73,7 +73,7 @@ const ComoFunciona = () => {
         estiloTitulo="text-2xl font-bold"
         texto="Crie agora seu perfil personalizado e descubra roteiros únicos feitos especialmente para você!"
         estiloTexto="text-lg"
-        textoBotao="Começar agora"
+        textoBotao="Crie sua conta"
       />
     </>
   );
