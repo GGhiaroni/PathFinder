@@ -24,6 +24,7 @@ const Hero = () => {
           <BotaoEstilizado
             titulo="Crie sua conta"
             estiloBotao="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
+            href="/cadastre-se"
           />
           <BotaoEstilizado
             titulo="Ver roteiros"
