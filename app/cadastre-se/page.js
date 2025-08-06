@@ -12,7 +12,7 @@ const PaginaDeCadastro = () => {
           <UserRound size={48} className="text-purple-700 mb-4" />
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Criar Conta</h1>
           <p className="text-gray-600 mb-8">
-            Junte-se ao TravelGuide e descubra roteiros únicos
+            Junte-se ao PathFinder e descubra roteiros únicos.
           </p>
         </div>
 
