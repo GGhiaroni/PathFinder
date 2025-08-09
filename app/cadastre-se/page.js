@@ -1,8 +1,56 @@
 "use client";
 
+import { cadastroSchema } from "@/lib/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, Lock, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 const PaginaDeCadastro = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    resolver: zodResolver(cadastroSchema),
+    defaultValues: {
+      nomeCompleto: "",
+      email: "",
+      senha: "",
+      confirmarSenha: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nomeCompleto: data.nomeCompleto,
+          email: data.email,
+          senha: data.senha,
+          confirmarSenha: data.confirmarSenha,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success("Usuário cadastrado com sucesso!");
+        reset();
+      } else {
+        toast.error("Erro ao cadastrar usuário.");
+        console.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Erro ao conectar com o servidor. Tente novamente.");
+      console.error(error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 sm:p-6 md:p-8">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 opacity-20 z-0" />
@@ -16,7 +64,7 @@ const PaginaDeCadastro = () => {
           </p>
         </div>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="opacity-0 animate-slide-in-right-1">
             <div className="relative">
               <UserRound
@@ -27,7 +75,13 @@ const PaginaDeCadastro = () => {
                 type="text"
                 placeholder="Seu nome completo"
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                {...register("nomeCompleto")}
               />
+              {errors.nomeCompleto && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.nomeCompleto.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -41,7 +95,13 @@ const PaginaDeCadastro = () => {
                 type="email"
                 placeholder="seu@email.com"
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                {...register("email")}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -55,7 +115,13 @@ const PaginaDeCadastro = () => {
                 type="password"
                 placeholder="Mínimo 6 caracteres"
                 className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                {...register("senha")}
               />
+              {errors.senha && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.senha.message}
+                </p>
+              )}
               <Eye
                 size={20}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
@@ -73,7 +139,13 @@ const PaginaDeCadastro = () => {
                 type="password"
                 placeholder="Digite a senha novamente"
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                {...register("confirmarSenha")}
               />
+              {errors.confirmarSenha && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmarSenha.message}
+                </p>
+              )}
             </div>
           </div>
 
