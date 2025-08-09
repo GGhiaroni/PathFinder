@@ -1,11 +1,12 @@
+import pool from "@/lib/db";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { nomeCompleto, email, senha, senhaConfirmada } =
-      await request.json();
+    const { nomeCompleto, email, senha, confirmarSenha } = await request.json();
 
-    if (!nomeCompleto || !email || !senha || !senhaConfirmada) {
+    if (!nomeCompleto || !email || !senha || !confirmarSenha) {
       return NextResponse.json(
         { message: "Todos os campos são obrigatórios!" },
         { status: 400 }
@@ -27,7 +28,7 @@ export async function POST(request) {
       );
     }
 
-    if (senha !== senhaConfirmada) {
+    if (senha !== confirmarSenha) {
       return NextResponse.json(
         { message: "As senhas não coincidem." },
         { status: 400 }
@@ -53,7 +54,7 @@ export async function POST(request) {
     const senhaHash = await bcrypt.hash(senha, salt);
 
     const novoUsuario = await client.query(
-      "INSERT INTO usuarios (nome_completo, email, senhaHash) VALUES ($1, $2, $3) RETURNING id, email",
+      "INSERT INTO usuarios (nome_completo, email, senha_hash) VALUES ($1, $2, $3) RETURNING id, email",
       [nomeCompleto, email, senhaHash]
     );
     client.release();

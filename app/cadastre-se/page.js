@@ -64,7 +64,12 @@ const PaginaDeCadastro = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+          method="POST"
+          action="/api/auth/register"
+        >
           <div className="opacity-0 animate-slide-in-right-1">
             <div className="relative">
               <UserRound
