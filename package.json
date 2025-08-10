@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@hookform/resolvers": "^5.2.1",
+    "@hookform/resolvers": "^3.9.0",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.19.2",
     "lucide-react": "^0.523.0",
@@ -21,7 +21,7 @@
     "pg": "^8.16.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.62.0",
+    "react-hook-form": "^7.52.1",
     "sonner": "^2.0.6",
     "zod": "^3.25.76"
   },
