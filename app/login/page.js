@@ -4,10 +4,13 @@ import { loginSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, Lock, Mail } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const PaginaDeLogin = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -37,6 +40,7 @@ const PaginaDeLogin = () => {
       if (response.ok) {
         toast.success("Login realizado com sucesso!");
         reset();
+        router.push("/perfil");
       } else {
         toast.error("Erro no login.");
         console.error(result.message);
