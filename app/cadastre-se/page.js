@@ -4,10 +4,13 @@ import { cadastroSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, Lock, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const PaginaDeCadastro = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -41,6 +44,7 @@ const PaginaDeCadastro = () => {
       if (response.ok) {
         toast.success("Usuário cadastrado com sucesso!");
         reset();
+        router.push("/login");
       } else {
         toast.error("Erro ao cadastrar usuário.");
         console.error(result.message);
