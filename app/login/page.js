@@ -2,14 +2,21 @@
 
 import { loginSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const PaginaDeLogin = () => {
   const router = useRouter();
+
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+
+  const toggleMostrarSenha = () => {
+    setMostrarSenha(!mostrarSenha);
+  };
 
   const {
     register,
@@ -100,7 +107,7 @@ const PaginaDeLogin = () => {
               />
 
               <input
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 placeholder="Sua senha"
                 className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 {...register("senha")}
@@ -112,10 +119,19 @@ const PaginaDeLogin = () => {
                 </p>
               )}
 
-              <Eye
-                size={20}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-              />
+              {mostrarSenha ? (
+                <EyeOff
+                  size={20}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  onClick={toggleMostrarSenha}
+                />
+              ) : (
+                <Eye
+                  size={20}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  onClick={toggleMostrarSenha}
+                />
+              )}
             </div>
           </div>
 

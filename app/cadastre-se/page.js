@@ -2,14 +2,21 @@
 
 import { cadastroSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, Lock, Mail, UserRound } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const PaginaDeCadastro = () => {
   const router = useRouter();
+
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+
+  const toggleMostrarSenha = () => {
+    setMostrarSenha(!mostrarSenha);
+  };
 
   const {
     register,
@@ -121,7 +128,7 @@ const PaginaDeCadastro = () => {
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 placeholder="Mínimo 6 caracteres"
                 className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 {...register("senha")}
@@ -131,10 +138,19 @@ const PaginaDeCadastro = () => {
                   {errors.senha.message}
                 </p>
               )}
-              <Eye
-                size={20}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-              />
+              {mostrarSenha ? (
+                <EyeOff
+                  size={20}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  onClick={toggleMostrarSenha}
+                />
+              ) : (
+                <Eye
+                  size={20}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  onClick={toggleMostrarSenha}
+                />
+              )}
             </div>
           </div>
 
@@ -145,7 +161,7 @@ const PaginaDeCadastro = () => {
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
-                type="password"
+                type={mostrarSenha ? "text" : "password"}
                 placeholder="Digite a senha novamente"
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 {...register("confirmarSenha")}
