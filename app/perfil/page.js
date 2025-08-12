@@ -54,7 +54,7 @@ const MeusRoteiros = observer(() => {
               Você ainda não salvou nenhum roteiro.
             </p>
             <button
-              onClick={() => router.push("/perfil")}
+              onClick={() => router.push("/criar-roteiro")}
               className="flex items-center justify-center mx-auto bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:from-purple-700 hover:to-fuchsia-700 transition-colors shadow-lg btn-hover-scale"
             >
               <PlusCircle size={22} className="mr-2" />

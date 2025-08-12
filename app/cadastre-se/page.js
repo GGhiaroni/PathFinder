@@ -2,7 +2,7 @@
 
 import { cadastroSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
+import { CalendarDays, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -40,6 +40,7 @@ const PaginaDeCadastro = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nomeCompleto: data.nomeCompleto,
+          dataDeNascimento: data.dataDeNascimento,
           email: data.email,
           senha: data.senha,
           confirmarSenha: data.confirmarSenha,
@@ -102,6 +103,34 @@ const PaginaDeCadastro = () => {
           </div>
 
           <div className="opacity-0 animate-slide-in-right-2">
+            <div className="w-full">
+              <label
+                htmlFor="dataDeNascimento"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Data de Nascimento
+              </label>
+              <div className="relative">
+                <CalendarDays
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  id="dataDeNascimento"
+                  type="date"
+                  className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 appearance-none"
+                  {...register("dataDeNascimento")}
+                />
+                {errors.dataDeNascimento && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.dataDeNascimento.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="opacity-0 animate-slide-in-right-3">
             <div className="relative">
               <Mail
                 size={20}
@@ -121,7 +150,7 @@ const PaginaDeCadastro = () => {
             </div>
           </div>
 
-          <div className="opacity-0 animate-slide-in-right-3">
+          <div className="opacity-0 animate-slide-in-right-4">
             <div className="relative">
               <Lock
                 size={20}
@@ -154,7 +183,7 @@ const PaginaDeCadastro = () => {
             </div>
           </div>
 
-          <div className="opacity-0 animate-slide-in-right-4">
+          <div className="opacity-0 animate-slide-in-right-5">
             <div className="relative">
               <Lock
                 size={20}
