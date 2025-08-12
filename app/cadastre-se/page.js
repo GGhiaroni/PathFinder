@@ -13,6 +13,7 @@ const PaginaDeCadastro = () => {
   const router = useRouter();
 
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [dataDeNascimentoValor, setDataDeNascimentoValor] = useState("");
 
   const toggleMostrarSenha = () => {
     setMostrarSenha(!mostrarSenha);
@@ -103,30 +104,26 @@ const PaginaDeCadastro = () => {
           </div>
 
           <div className="opacity-0 animate-slide-in-right-2">
-            <div className="w-full">
-              <label
-                htmlFor="dataDeNascimento"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Data de Nascimento
-              </label>
-              <div className="relative">
-                <CalendarDays
-                  size={20}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  id="dataDeNascimento"
-                  type="date"
-                  className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 appearance-none"
-                  {...register("dataDeNascimento")}
-                />
-                {errors.dataDeNascimento && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.dataDeNascimento.message}
-                  </p>
-                )}
-              </div>
+            <div className="relative">
+              <CalendarDays
+                size={20}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              />
+              <input
+                type="date"
+                placeholder="Sua data de nascimento"
+                className={`"w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 appearance-none ${
+                  dataDeNascimentoValor ? "text-gray-900" : "text-gray-400"
+                }`}
+                {...register("dataDeNascimento", {
+                  onChange: (e) => setDataDeNascimentoValor(e.target.value),
+                })}
+              />
+              {errors.dataDeNascimento && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.dataDeNascimento.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -138,7 +135,7 @@ const PaginaDeCadastro = () => {
               />
               <input
                 type="email"
-                placeholder="seu@email.com"
+                placeholder="Seu melhor email"
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 {...register("email")}
               />
@@ -158,7 +155,7 @@ const PaginaDeCadastro = () => {
               />
               <input
                 type={mostrarSenha ? "text" : "password"}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Sua senha"
                 className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
                 {...register("senha")}
               />
