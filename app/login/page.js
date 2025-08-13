@@ -1,6 +1,7 @@
 "use client";
 
 import { loginSchema } from "@/lib/schemas";
+import { usuarioStore } from "@/store/usuarioStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Link from "next/link";
@@ -45,6 +46,9 @@ const PaginaDeLogin = () => {
       const result = await response.json();
 
       if (response.ok) {
+        const { token, user } = result;
+        localStorage.setItem("token", token);
+        usuarioStore.loginUsuario(user);
         toast.success("Login realizado com sucesso!");
         reset();
         router.push("/perfil");
