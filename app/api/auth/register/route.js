@@ -4,9 +4,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { nomeCompleto, email, senha, confirmarSenha } = await request.json();
+    const { nomeCompleto, dataDeNascimento, email, senha, confirmarSenha } =
+      await request.json();
 
-    if (!nomeCompleto || !email || !senha || !confirmarSenha) {
+    if (
+      !nomeCompleto ||
+      !dataDeNascimento ||
+      !email ||
+      !senha ||
+      !confirmarSenha
+    ) {
       return NextResponse.json(
         { message: "Todos os campos são obrigatórios!" },
         { status: 400 }
@@ -35,6 +42,9 @@ export async function POST(request) {
       );
     }
 
+    const [day, month, year] = dataDeNascimento.split("/");
+    const dataFormatada = `${year}-${month}-${day}`;
+
     const client = await pool.connect();
 
     const emailJaExisteNoBanco = await client.query(
@@ -54,8 +64,8 @@ export async function POST(request) {
     const senhaHash = await bcrypt.hash(senha, salt);
 
     const novoUsuario = await client.query(
-      "INSERT INTO usuarios (nome_completo, email, senha_hash) VALUES ($1, $2, $3) RETURNING id, email",
-      [nomeCompleto, email, senhaHash]
+      "INSERT INTO usuarios (nome_completo, data_de_nascimento, email, senha_hash) VALUES ($1, $2, $3, $4) RETURNING id, email",
+      [nomeCompleto, dataFormatada, email, senhaHash]
     );
     client.release();
 
