@@ -6,7 +6,8 @@ import { CalendarDays, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { IMaskInput } from "react-imask";
 import { toast } from "sonner";
 
 const PaginaDeCadastro = () => {
@@ -22,12 +23,14 @@ const PaginaDeCadastro = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
       nomeCompleto: "",
+      dataDeNascimento: "",
       email: "",
       senha: "",
       confirmarSenha: "",
@@ -84,119 +87,149 @@ const PaginaDeCadastro = () => {
           action="/api/auth/register"
         >
           <div className="opacity-0 animate-slide-in-right-1">
-            <div className="relative">
-              <UserRound
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="text"
-                placeholder="Seu nome completo"
-                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                {...register("nomeCompleto")}
-              />
-              {errors.nomeCompleto && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.nomeCompleto.message}
-                </p>
-              )}
+            <div className="flex flex-col space-y-1">
+              <div className="relative">
+                <UserRound
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  type="text"
+                  placeholder="Seu nome completo"
+                  className={`w-full pl-12 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ${
+                    errors.nomeCompleto ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("nomeCompleto")}
+                />
+              </div>
+              <div className="h-2.25">
+                {errors.nomeCompleto && (
+                  <p className="text-red-500 text-sm">
+                    {errors.nomeCompleto.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="opacity-0 animate-slide-in-right-2">
-            <div className="relative">
-              <CalendarDays
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="date"
-                placeholder="Sua data de nascimento"
-                className={`"w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 appearance-none ${
-                  dataDeNascimentoValor ? "text-gray-900" : "text-gray-400"
-                }`}
-                {...register("dataDeNascimento", {
-                  onChange: (e) => setDataDeNascimentoValor(e.target.value),
-                })}
-              />
-              {errors.dataDeNascimento && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.dataDeNascimento.message}
-                </p>
-              )}
+            <div className="flex flex-col space-y-1">
+              <div className="relative">
+                <CalendarDays
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <Controller
+                  name="dataDeNascimento"
+                  control={control}
+                  render={({ field }) => (
+                    <IMaskInput
+                      mask="00/00/0000"
+                      placeholder="Sua data de nascimento"
+                      className={`w-full pl-12 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ${
+                        errors.dataDeNascimento
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              <div className="h-2.25.25">
+                {errors.dataDeNascimento && (
+                  <p className="text-red-500 text-sm">
+                    {errors.dataDeNascimento.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="opacity-0 animate-slide-in-right-3">
-            <div className="relative">
-              <Mail
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="email"
-                placeholder="Seu melhor email"
-                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                {...register("email")}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
+            <div className="flex flex-col space-y-1">
+              <div className="relative">
+                <Mail
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  type="email"
+                  placeholder="Seu melhor email"
+                  className={`w-full pl-12 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("email")}
+                />
+              </div>
+              <div className="h-2.25">
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="opacity-0 animate-slide-in-right-4">
-            <div className="relative">
-              <Lock
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type={mostrarSenha ? "text" : "password"}
-                placeholder="Sua senha"
-                className="w-full pl-12 pr-12 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                {...register("senha")}
-              />
-              {errors.senha && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.senha.message}
-                </p>
-              )}
-              {mostrarSenha ? (
-                <EyeOff
+            <div className="flex flex-col space-y-1">
+              <div className="relative">
+                <Lock
                   size={20}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-                  onClick={toggleMostrarSenha}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
                 />
-              ) : (
-                <Eye
-                  size={20}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
-                  onClick={toggleMostrarSenha}
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  placeholder="Sua senha"
+                  className={`w-full pl-12 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ${
+                    errors.senha ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("senha")}
                 />
-              )}
+                {mostrarSenha ? (
+                  <EyeOff
+                    size={20}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                    onClick={toggleMostrarSenha}
+                  />
+                ) : (
+                  <Eye
+                    size={20}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                    onClick={toggleMostrarSenha}
+                  />
+                )}
+              </div>
+              <div className="h-2.25">
+                {errors.senha && (
+                  <p className="text-red-500 text-sm">{errors.senha.message}</p>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="opacity-0 animate-slide-in-right-5">
-            <div className="relative">
-              <Lock
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type={mostrarSenha ? "text" : "password"}
-                placeholder="Digite a senha novamente"
-                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                {...register("confirmarSenha")}
-              />
-              {errors.confirmarSenha && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.confirmarSenha.message}
-                </p>
-              )}
+            <div className="flex flex-col space-y-1">
+              <div className="relative">
+                <Lock
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  placeholder="Digite a senha novamente"
+                  className={`w-full pl-12 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ${
+                    errors.confirmarSenha ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("confirmarSenha")}
+                />
+              </div>
+              <div className="h-2.25">
+                {errors.confirmarSenha && (
+                  <p className="text-red-500 text-sm">
+                    {errors.confirmarSenha.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
