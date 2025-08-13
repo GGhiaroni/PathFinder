@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import { loginSchema } from "@/lib/schemas";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -36,10 +37,26 @@ export async function POST(request) {
       );
     }
 
+    const payload = {
+      id: usuario.id,
+      email: usuario.email,
+    };
+
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      throw new Error("JWT_SECRET não definido.");
+    }
+
+    const token = jwt.sign(payload, secret, { expiresIn: "1d" });
+
+    const { senha_hash, ...dadosUsuario } = usuario;
+
     return NextResponse.json(
       {
         message: "Login realizado com sucesso.",
-        user: { id: usuario.id, email: usuario.email },
+        token,
+        user: dadosUsuario,
       },
       { status: 200 }
     );
