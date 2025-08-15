@@ -1,6 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
+import { usuarioStore } from "@/store/usuarioStore";
 import { gerarRoteiroClient, sugerirDestinosClient } from "@/utils/gemini";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,7 @@ const Loading = observer(() => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      if (!perfilStore.nome) {
+      if (!usuarioStore.nomeUsuario) {
         router.push("/perfil");
         return;
       }
@@ -20,8 +21,8 @@ const Loading = observer(() => {
       if (perfilStore.destinoEscolhido) {
         try {
           const novoRoteiro = await gerarRoteiroClient({
-            nome: perfilStore.nome,
-            idade: perfilStore.idade,
+            nome: usuarioStore.nomeUsuario,
+            idade: usuarioStore.idadeUsuario,
             interesses: perfilStore.interesses,
             orcamento: perfilStore.orcamento,
             destino: perfilStore.destinoEscolhido,
@@ -37,8 +38,8 @@ const Loading = observer(() => {
       } else if (perfilStore.sugestoesDestino.length === 0) {
         try {
           const sugestoes = await sugerirDestinosClient({
-            nome: perfilStore.nome,
-            idade: perfilStore.idade,
+            nome: usuarioStore.nomeUsuario,
+            idade: usuarioStore.idadeUsuario,
             interesses: perfilStore.interesses,
             orcamento: perfilStore.orcamento,
           });

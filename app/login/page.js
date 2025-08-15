@@ -139,12 +139,14 @@ const PaginaDeLogin = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full p-4 text-white font-semibold rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg opacity-0 animate-slide-in-down"
-          >
-            Entrar
-          </button>
+          <div className="opacity-0 animate-slide-in-right-3">
+            <button
+              type="submit"
+              className="w-full p-4 text-white font-semibold rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg opacity-0 animate-slide-in-down"
+            >
+              Entrar
+            </button>
+          </div>
         </form>
 
         <p className="text-center mt-6 text-gray-600">

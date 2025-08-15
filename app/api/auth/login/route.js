@@ -1,7 +1,8 @@
 import pool from "@/lib/db";
 import { loginSchema } from "@/lib/schemas";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { serialize } from "cookie";
+import { sign } from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -43,22 +44,41 @@ export async function POST(request) {
     };
 
     const secret = process.env.JWT_SECRET;
+    const refresh_secret = process.env.REFRESH_SECRET;
 
-    if (!secret) {
-      throw new Error("JWT_SECRET não definido.");
+    if (!secret || !refresh_secret) {
+      throw new Error("Variáveis de ambiente de segredo JWT não definidas.");
     }
 
-    const token = jwt.sign(payload, secret, { expiresIn: "1d" });
+    const accessToken = sign(payload, secret, { expiresIn: "15m" });
+
+    const refreshToken = sign({ id: usuario.id }, refresh_secret, {
+      expiresIn: "7d",
+    });
+
+    const serializedCookie = serialize("auth_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     const { senha_hash, ...dadosUsuario } = usuario;
 
-    return NextResponse.json(
-      {
+    return new NextResponse(
+      JSON.stringify({
         message: "Login realizado com sucesso.",
-        token,
+        token: accessToken,
         user: dadosUsuario,
-      },
-      { status: 200 }
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Set-Cookie": serializedCookie,
+        },
+      }
     );
   } catch (error) {
     return NextResponse.json(

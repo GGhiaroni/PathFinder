@@ -2,12 +2,13 @@
 
 import { interesses, orcamento } from "@/constants";
 import perfilStore from "@/store/perfilStore";
-import { UserRound } from "lucide-react";
+import { usuarioStore } from "@/store/usuarioStore";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
-const Perfil = () => {
+const Perfil = observer(() => {
   const router = useRouter();
 
   const {
@@ -21,6 +22,8 @@ const Perfil = () => {
     defaultValues: {
       interesses: [],
       orcamento: "",
+      nome: usuarioStore.nomeUsuario || null,
+      idade: usuarioStore.idadeUsuario || null,
     },
   });
 
@@ -58,23 +61,29 @@ const Perfil = () => {
   };
 
   const onSubmit = (data) => {
-    toast.success("Perfil criado com sucesso!");
-    console.log("Dados do Perfil: ", data);
+    const perfilCompleto = {
+      nome: usuarioStore.nomeUsuario,
+      idade: usuarioStore.idadeUsuario,
+      interesses: data.interesses,
+      orcamento: data.orcamento,
+    };
 
-    perfilStore.setPerfil(data);
+    if (!perfilCompleto.nome || !perfilCompleto.idade) {
+      toast.error(
+        "Erro: informações incompletas. Por favor, faça o login novamente."
+      );
+      return;
+    }
+
+    toast.success("Perfil criado com sucesso!");
+    console.log("Dados do perfil: ", perfilCompleto);
+
+    perfilStore.setPerfil(perfilCompleto);
 
     router.push("/loading");
   };
 
   const onError = (errors) => {
-    if (errors.nome) {
-      toast.error("Nome é um campo obrigatório.");
-      return;
-    }
-    if (errors.idade) {
-      toast.error("Idade é um campo obrigatório.");
-      return;
-    }
     if (errors.interesses) {
       toast.error("Selecione pelo menos um interesse.");
       return;
@@ -90,12 +99,15 @@ const Perfil = () => {
     <section className="min-h-screen bg-gradient-to-r from-indigo-50 to-fuchsia-100">
       <div className="flex flex-col items-center justify-center py-10 px-8">
         <div className="flex items-center gap-3">
-          <UserRound color="#851F92" size={30} className="shrink-0" />
-          <h1 className="text-[2.5rem] text-textoPreto leading-tight font-extrabold">
-            Crie seu perfil
+          <h1 className="text-3xl text-textoPreto leading-tight font-extrabold">
+            Olá,
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-600">
+              {" "}
+              {usuarioStore.nomeUsuario}
+            </span>
           </h1>
         </div>
-        <h3 className="text-xl font-semibold text-corCinza text-center mt-4">
+        <h3 className="text-lg font-semibold text-corCinza text-center mt-4">
           Conte-nos sobre suas preferências para criarmos seu roteiro perfeito
         </h3>
       </div>
@@ -104,33 +116,6 @@ const Perfil = () => {
         onSubmit={handleSubmit(onSubmit, onError)}
         className="bg-white mx-4 flex flex-col items-start justify-start rounded-lg py-6 px-6 gap-6"
       >
-        <h3 className="text-3xl font-bold ">Informações básicas</h3>
-
-        <div className="w-full flex flex-col gap-2 justify-start">
-          <label htmlFor="nome" className="font-medium text-textoPreto">
-            Nome <span className="text-red-700">*</span>
-          </label>
-          <input
-            id="nome"
-            placeholder="Seu nome"
-            className="border border-gray-300 rounded-md px-4 py-2"
-            {...register("nome", { required: "Nome é obrigatório" })}
-          />
-        </div>
-
-        <div className="w-full flex flex-col gap-2 justify-start">
-          <label htmlFor="idade" className="font-medium text-textoPreto">
-            Idade <span className="text-red-700">*</span>
-          </label>
-          <input
-            id="idade"
-            placeholder="Seu nome"
-            className="border border-gray-300 rounded-md px-4 py-2"
-            type="number"
-            {...register("idade", { required: "Idade é obrigatória" })}
-          />
-        </div>
-
         <div className="w-full">
           <h3 className="text-2xl font-bold mb-4">
             Seus Interesses <span className="text-red-700">*</span>
@@ -210,6 +195,6 @@ const Perfil = () => {
       </form>
     </section>
   );
-};
+});
 
 export default Perfil;
