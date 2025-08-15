@@ -43,14 +43,14 @@ export async function POST(request) {
       email: usuario.email,
     };
 
-    const secret = process.env.JWT_SECRET;
+    const jwt_secret = process.env.JWT_SECRET;
     const refresh_secret = process.env.REFRESH_SECRET;
 
-    if (!secret || !refresh_secret) {
+    if (!jwt_secret || !refresh_secret) {
       throw new Error("Variáveis de ambiente de segredo JWT não definidas.");
     }
 
-    const accessToken = sign(payload, secret, { expiresIn: "15m" });
+    const accessToken = sign(payload, jwt_secret, { expiresIn: "15m" });
 
     const refreshToken = sign({ id: usuario.id }, refresh_secret, {
       expiresIn: "7d",
