@@ -6,19 +6,26 @@ const refresh_secret = process.env.REFRESH_SECRET;
 
 export async function middleware(request) {
   const token = request.headers.get("Authorization")?.split(" ")[1];
-
   const pathName = request.nextUrl.pathname;
-  if (
-    pathName.startsWith("/login") ||
-    pathName.startsWith("/cadastro") ||
-    pathName.startsWith("/api/auth/login") ||
-    pathName.startsWith("/api/auth/refresh")
-  ) {
+
+  if (pathName.startsWith("/_next")) {
+    return NextResponse.next();
+  }
+
+  const publicPaths = [
+    "/",
+    "/login",
+    "/cadastro",
+    "/api/auth/login",
+    "/api/auth/refresh",
+  ];
+
+  if (publicPaths.some((path) => pathName.startsWith(path))) {
     return NextResponse.next();
   }
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login"), request.url);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
