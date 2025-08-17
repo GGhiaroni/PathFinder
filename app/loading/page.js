@@ -2,7 +2,7 @@
 
 import perfilStore from "@/store/perfilStore";
 import { usuarioStore } from "@/store/usuarioStore";
-import { sugerirDestinosClient } from "@/utils/gemini";
+import { gerarRoteiroClient, sugerirDestinosClient } from "@/utils/gemini";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
