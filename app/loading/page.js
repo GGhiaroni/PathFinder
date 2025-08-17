@@ -2,7 +2,7 @@
 
 import perfilStore from "@/store/perfilStore";
 import { usuarioStore } from "@/store/usuarioStore";
-import { gerarRoteiroClient, sugerirDestinosClient } from "@/utils/gemini";
+import { sugerirDestinosClient } from "@/utils/gemini";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -13,7 +13,19 @@ const Loading = observer(() => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      if (!usuarioStore.nomeUsuario) {
+      if (
+        !usuarioStore.nomeUsuario ||
+        !usuarioStore.idadeUsuario ||
+        perfilStore.interesses.length === 0 ||
+        !perfilStore.orcamento
+      ) {
+        console.error(
+          "Dados do perfil incompletos para a sugestão de destinos."
+        );
+        toast.error(
+          "Erro: informações de perfil incompletas. Por favor, preencha novamente."
+        );
+        perfilStore.reset();
         router.push("/perfil");
         return;
       }
@@ -37,6 +49,13 @@ const Loading = observer(() => {
         }
       } else if (perfilStore.sugestoesDestino.length === 0) {
         try {
+          console.log("Chamando API com os seguintes dados:", {
+            nome: usuarioStore.nomeUsuario,
+            idade: usuarioStore.idadeUsuario,
+            interesses: perfilStore.interesses,
+            orcamento: perfilStore.orcamento,
+          });
+
           const sugestoes = await sugerirDestinosClient({
             nome: usuarioStore.nomeUsuario,
             idade: usuarioStore.idadeUsuario,

@@ -80,13 +80,6 @@ const Perfil = observer(() => {
       orcamento: data.orcamento,
     };
 
-    if (!perfilCompleto.nome || !perfilCompleto.idade) {
-      toast.error(
-        "Erro: informações incompletas. Por favor, faça o login novamente."
-      );
-      return;
-    }
-
     toast.success("Perfil criado com sucesso!");
     console.log("Dados do perfil: ", perfilCompleto);
 
