@@ -4,13 +4,14 @@ import { loginSchema } from "@/lib/schemas";
 import { usuarioStore } from "@/store/usuarioStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { observer } from "mobx-react-lite";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const PaginaDeLogin = () => {
+const PaginaDeLogin = observer(() => {
   const router = useRouter();
 
   const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -161,6 +162,6 @@ const PaginaDeLogin = () => {
       </div>
     </div>
   );
-};
+});
 
 export default PaginaDeLogin;

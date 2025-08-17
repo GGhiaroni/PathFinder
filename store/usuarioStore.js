@@ -1,4 +1,5 @@
-const { makeAutoObservable } = require("mobx");
+import { makeAutoObservable } from "mobx";
+import { makePersistable } from "mobx-persist-store";
 
 const calcularIdadeUsuario = (dataDeNascimento) => {
   if (!dataDeNascimento) {
@@ -27,9 +28,14 @@ const calcularIdadeUsuario = (dataDeNascimento) => {
 
 class UsuarioStore {
   usuario = null;
+  isReady = false;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setReady() {
+    this.isReady = true;
   }
 
   loginUsuario(dadosUsuario) {
@@ -53,4 +59,16 @@ class UsuarioStore {
   }
 }
 
-export const usuarioStore = new UsuarioStore();
+const usuarioStore = new UsuarioStore();
+
+if (typeof window !== "undefined") {
+  makePersistable(usuarioStore, {
+    name: "UsuarioStore",
+    properties: ["usuario"],
+    storage: window.localStorage,
+  }).then(() => {
+    usuarioStore.setReady();
+  });
+}
+
+export { usuarioStore };

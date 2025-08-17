@@ -3,8 +3,10 @@
 import { interesses, orcamento } from "@/constants";
 import perfilStore from "@/store/perfilStore";
 import { usuarioStore } from "@/store/usuarioStore";
+import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -22,10 +24,20 @@ const Perfil = observer(() => {
     defaultValues: {
       interesses: [],
       orcamento: "",
-      nome: usuarioStore.nomeUsuario || null,
-      idade: usuarioStore.idadeUsuario || null,
+      nome: null,
+      idade: null,
     },
   });
+
+  useEffect(() => {
+    const disposer = autorun(() => {
+      if (usuarioStore.isReady && usuarioStore.usuario) {
+        setValue("nome", usuarioStore.nomeUsuario);
+        setValue("idade", usuarioStore.idadeUsuario);
+      }
+    });
+    return () => disposer();
+  }, [setValue]);
 
   const interessesSelecionados = useWatch({
     control,
@@ -95,17 +107,31 @@ const Perfil = observer(() => {
     }
   };
 
+  if (!usuarioStore.isReady) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Carregando...</p>
+      </div>
+    );
+  }
+
   return (
     <section className="min-h-screen bg-gradient-to-r from-indigo-50 to-fuchsia-100">
       <div className="flex flex-col items-center justify-center py-10 px-8">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl text-textoPreto leading-tight font-extrabold">
-            Olá,
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-600">
-              {" "}
-              {usuarioStore.nomeUsuario}
-            </span>
-          </h1>
+          {usuarioStore.nomeUsuario ? (
+            <h1 className="text-3xl text-textoPreto leading-tight font-extrabold">
+              Olá,
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-fuchsia-600">
+                {" "}
+                {usuarioStore.nomeUsuario}
+              </span>
+            </h1>
+          ) : (
+            <h1 className="text-3xl text-textoPreto leading-tight font-extrabold">
+              Carregando...
+            </h1>
+          )}
         </div>
         <h3 className="text-lg font-semibold text-corCinza text-center mt-4">
           Conte-nos sobre suas preferências para criarmos seu roteiro perfeito
