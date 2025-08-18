@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const Perfil = observer(() => {
+const MeusRoteiros = observer(() => {
   const router = useRouter();
   const { roteirosSalvos, removerRoteiroSalvo } = perfilStore;
 
@@ -122,4 +122,4 @@ const Perfil = observer(() => {
   );
 });
 
-export default Perfil;
+export default MeusRoteiros;
