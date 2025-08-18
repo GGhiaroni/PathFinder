@@ -178,29 +178,6 @@ const Roteiro = observer(() => {
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-          <button
-            onClick={handleSalvarRoteiro}
-            disabled={roteiroJaSalvo}
-            className={`flex items-center justify-center px-8 py-3 rounded-full font-semibold text-lg shadow-lg btn-hover-scale
-                       ${
-                         roteiroJaSalvo
-                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                           : "bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:from-purple-700 hover:to-fuchsia-700"
-                       }`}
-          >
-            <Save size={22} className="mr-2" />
-            {roteiroJaSalvo ? "Roteiro Salvo!" : "Salvar Roteiro"}
-          </button>
-          <button
-            onClick={() => router.push("/perfil")}
-            className="flex items-center justify-center bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors shadow-lg btn-hover-scale"
-          >
-            <PlusCircle size={22} className="mr-2" />
-            Criar Novo Roteiro
-          </button>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {parsedRoteiro.days.map((day, dayIndex) => (
             <div
@@ -276,7 +253,28 @@ const Roteiro = observer(() => {
           </div>
         )}
 
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <button
+            onClick={handleSalvarRoteiro}
+            disabled={roteiroJaSalvo}
+            className={`flex items-center justify-center px-8 py-3 rounded-full font-semibold text-lg shadow-lg btn-hover-scale
+                           ${
+                             roteiroJaSalvo
+                               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                               : "bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:from-purple-700 hover:to-fuchsia-700"
+                           }`}
+          >
+            <Save size={22} className="mr-2" />
+            {roteiroJaSalvo ? "Roteiro Salvo!" : "Salvar Roteiro"}
+          </button>
+          <button
+            onClick={() => router.push("/perfil")}
+            className="flex items-center justify-center bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors shadow-lg btn-hover-scale"
+          >
+            <PlusCircle size={22} className="mr-2" />
+            Criar Novo Roteiro
+          </button>
+
           <button
             onClick={() => router.push("/")}
             className="flex items-center justify-center bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-300 transition-colors shadow-lg btn-hover-scale"
