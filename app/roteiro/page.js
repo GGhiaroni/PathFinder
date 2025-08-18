@@ -1,6 +1,7 @@
 "use client";
 
 import perfilStore from "@/store/perfilStore";
+import { usuarioStore } from "@/store/usuarioStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import {
   AlarmClock,
@@ -115,21 +116,48 @@ const Roteiro = observer(() => {
     setParsedRoteiro(parsed);
   }, [roteiro, nome, router, destinoEscolhido, parseRoteiroContent]);
 
-  const handleSalvarRoteiro = () => {
-    const salvo = perfilStore.addSalvarRoteiro({
-      roteiroText: roteiro,
-      destino: {
-        nomeCidade: destinoEscolhido,
-        nomePais: paisDestinoEscolhido,
-      },
-      nomePerfil: nome,
-    });
+  const handleSalvarRoteiro = async () => {
+    if (!usuarioStore.usuario?.id) {
+      toast.error(
+        "Erro: ID do usuário não encontrado. Faça o login novamente."
+      );
+      return;
+    }
 
-    if (salvo) {
-      toast.success("Roteiro salvo com sucesso!");
-      setRoteiroJaSalvo(true);
-    } else {
-      toast.info("Este roteiro já está salvo.");
+    const dadosRoteiroParsed = parseRoteiroContent(perfilStore.roteiro);
+
+    if (!dadosRoteiroParsed) {
+      toast.error("Nenhum roteiro válido para salvar.");
+      return;
+    }
+
+    const dadosParaSalvar = {
+      usuarioId: usuarioStore.usuario.id,
+      titulo: `Roteiro em ${perfilStore.destinoEscolhido}`,
+      dadosRoteiro: dadosRoteiroParsed,
+    };
+
+    console.log("Dados que serão enviados para a API: ", dadosParaSalvar);
+
+    try {
+      const response = await fetch("/api/salvar-roteiro", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dadosParaSalvar),
+      });
+
+      if (response.ok) {
+        toast.success("Roteiro salvo com sucesso!");
+        setRoteiroJaSalvo(true);
+      } else {
+        const errorData = await response.json();
+        toast.error(`Falha ao salvar o roteiro: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar o roteiro:", error);
+      toast.error("Ocorreu um erro ao salvar o roteiro. Tente novamente.");
     }
   };
 
