@@ -118,7 +118,7 @@ const MeusRoteiros = observer(() => {
                     <div className="flex justify-center gap-2">
                       <p>{roteiroItem.titulo.replace("Roteiro em ", "")}</p>
 
-                      <p>{selecionarBandeiraPais("")}</p>
+                      <p>{selecionarBandeiraPais(roteiroItem.pais_destino)}</p>
                     </div>
                   </h2>
                   <p className="text-gray-600 text-sm mb-4">

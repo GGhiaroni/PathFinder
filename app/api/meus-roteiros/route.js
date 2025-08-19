@@ -20,7 +20,7 @@ export async function GET(request) {
     const client = await pool.connect();
 
     const query = `
-      SELECT id, titulo, dados_roteiro, data_criacao
+      SELECT id, titulo, dados_roteiro, data_criacao, pais_destino
       FROM roteiros_salvos
       WHERE usuario_id = $1
       ORDER BY data_criacao DESC;

@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { usuarioId, titulo, dadosRoteiro } = await request.json();
+    const { usuarioId, titulo, dadosRoteiro, paisDestino } =
+      await request.json();
 
-    if (!usuarioId || !titulo || !dadosRoteiro) {
+    if (!usuarioId || !titulo || !dadosRoteiro || paisDestino) {
       return NextResponse.json(
         { error: "Dados fornecidos para salvar o roteiro incompletos." },
         { status: 400 }
@@ -14,9 +15,9 @@ export async function POST(request) {
 
     const client = await pool.connect();
 
-    const query = `INSERT INTO roteiros_salvos (usuario_id, titulo, dados_roteiro, data_criacao) VALUES ($1, $2, $3, NOW()) RETURNING id;`;
+    const query = `INSERT INTO roteiros_salvos (usuario_id, titulo, dados_roteiro, pais_destino, data_criacao) VALUES ($1, $2, $3, $4, NOW()) RETURNING id;`;
 
-    const values = [usuarioId, titulo, dadosRoteiro];
+    const values = [usuarioId, titulo, dadosRoteiro, paisDestino];
 
     const result = await client.query(query, values);
 
