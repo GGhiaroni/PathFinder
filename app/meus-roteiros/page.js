@@ -85,7 +85,7 @@ const MeusRoteiros = observer(() => {
       <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-2xl border border-purple-100">
         <div className="text-center mb-10 pb-6 border-b border-purple-100">
           <h1 className="text-4xl sm:text-5xl font-extrabold text-[#851F92] leading-tight mb-4">
-            Meus Roteiros Salvos
+            Meus roteiros salvos
           </h1>
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
             Aqui você encontra todos os roteiros de viagem que você salvou.

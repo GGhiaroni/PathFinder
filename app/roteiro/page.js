@@ -38,15 +38,13 @@ const Roteiro = observer(() => {
 
     let currentDay = null;
     let inTipsSection = false;
+    let introDescriptionFound = false;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
       if (line.startsWith("## ")) {
         parsed.mainTitle = line.replace("## ", "").trim();
-        inTipsSection = false;
-      } else if (line.startsWith("**Este roteiro foca")) {
-        parsed.introDescription = line.replace(/\*\*/g, "").trim();
         inTipsSection = false;
       } else if (line.startsWith("**Dia ")) {
         if (currentDay) {
@@ -60,6 +58,7 @@ const Roteiro = observer(() => {
           activities: [],
         };
         inTipsSection = false;
+        introDescriptionFound = true;
       } else if (line.startsWith("**Dicas Adicionais:**")) {
         if (currentDay) {
           parsed.days.push(currentDay);
@@ -71,7 +70,6 @@ const Roteiro = observer(() => {
           parsed.tips.push(line.replace("* ", "").trim());
         } else if (currentDay) {
           const activityLine = line.replace("* ", "");
-
           const match = activityLine.match(/\*\*(.*?)\*\*:\s*(.*)/);
           if (match && match[1] && match[2]) {
             currentDay.activities.push({
@@ -99,6 +97,9 @@ const Roteiro = observer(() => {
             }
           }
         }
+      } else if (!introDescriptionFound && line.length > 0) {
+        parsed.introDescription = line.replace(/\*\*/g, "").trim();
+        introDescriptionFound = true;
       }
     }
     if (currentDay) {

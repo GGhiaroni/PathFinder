@@ -6,7 +6,7 @@ export async function POST(request) {
     const { usuarioId, titulo, dadosRoteiro, paisDestino } =
       await request.json();
 
-    if (!usuarioId || !titulo || !dadosRoteiro || paisDestino) {
+    if (!usuarioId || !titulo || !dadosRoteiro || !paisDestino) {
       return NextResponse.json(
         { error: "Dados fornecidos para salvar o roteiro incompletos." },
         { status: 400 }
