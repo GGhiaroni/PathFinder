@@ -98,7 +98,7 @@ const MeusRoteiros = observer(() => {
               Você ainda não salvou nenhum roteiro.
             </p>
             <button
-              onClick={() => router.push("/criar-roteiro")}
+              onClick={() => router.push("/perfil")}
               className="flex items-center justify-center mx-auto bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:from-purple-700 hover:to-fuchsia-700 transition-colors shadow-lg btn-hover-scale"
             >
               <PlusCircle size={22} className="mr-2" />
@@ -116,17 +116,18 @@ const MeusRoteiros = observer(() => {
                   <h2 className="text-xl font-bold text-[#851F92] mb-2 flex items-center">
                     <MapPin size={24} className="mr-2 text-purple-700" />
                     <div className="flex justify-center gap-2">
-                      <p>{roteiroItem.destino.nomeCidade}</p>
-                      <p>
-                        {selecionarBandeiraPais(roteiroItem.destino.nomePais)}
-                      </p>
+                      <p>{roteiroItem.titulo.replace("Roteiro em ", "")}</p>
+
+                      <p>{selecionarBandeiraPais("")}</p>
                     </div>
                   </h2>
                   <p className="text-gray-600 text-sm mb-4">
-                    Salvo em: {roteiroItem.salvoEm}
+                    Salvo em:{" "}
+                    {new Date(roteiroItem.data_criacao).toLocaleDateString()}
                   </p>
                   <p className="text-gray-800 line-clamp-3 mb-4">
-                    {roteiroItem.roteiroText.substring(0, 150)}...
+                    {roteiroItem.dados_roteiro?.introDescription ||
+                      "Nenhuma descrição disponível."}
                   </p>
                 </div>
                 <div className="flex justify-between items-center mt-4">
