@@ -1,6 +1,6 @@
 "use client";
 
-import perfilStore from "@/store/perfilStore";
+import { usuarioStore } from "@/store/usuarioStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
 import { Calendar, Home, MapPin, PlusCircle, Trash2 } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -10,18 +10,62 @@ import { toast } from "sonner";
 
 const MeusRoteiros = observer(() => {
   const router = useRouter();
-  const { roteirosSalvos, removerRoteiroSalvo } = perfilStore;
 
   const [loading, setLoading] = useState(true);
+  const [roteirosSalvos, setRoteirosSalvos] = useState([]);
+
+  const fetchRoteiros = async () => {
+    if (!usuarioStore.usuario?.id) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `/api/meus-roteiros?usuarioId=${usuarioStore.usuario.id}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setRoteirosSalvos(data);
+      } else {
+        toast.error("Não foi possível carregar os roteiros.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar roteiros:", error);
+      toast.error("Erro de conexão. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoverRoteiro = async (id) => {
+    try {
+      const response = await fetch("/api/meus-roteiros", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (response.ok) {
+        toast.success("Roteiro removido com sucesso!");
+        fetchRoteiros();
+      } else {
+        toast.error("Falha ao remover o roteiro.");
+      }
+    } catch (error) {
+      console.error("Erro ao remover o roteiro: ", error);
+      toast.error("Ocorreu um erro ao remover o roteiro.");
+    }
+  };
 
   useEffect(() => {
-    setLoading(false);
+    fetchRoteiros();
   }, []);
-
-  const handleRemoverRoteiro = (id) => {
-    removerRoteiroSalvo(id);
-    toast.success("Roteiro removido com sucesso!");
-  };
 
   if (loading) {
     return (
