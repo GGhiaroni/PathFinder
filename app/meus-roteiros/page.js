@@ -107,49 +107,56 @@ const MeusRoteiros = observer(() => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {roteirosSalvos.map((roteiroItem) => (
-              <div
-                key={roteiroItem.id}
-                className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col justify-between animate-slideInUp"
-              >
-                <div>
-                  <h2 className="text-xl font-bold text-[#851F92] mb-2 flex items-center">
-                    <MapPin size={24} className="mr-2 text-purple-700" />
-                    <div className="flex justify-center gap-2">
-                      <p>{roteiroItem.titulo.replace("Roteiro em ", "")}</p>
+            {roteirosSalvos.map((roteiroItem) => {
+              const nomeCidade = roteiroItem.titulo
+                .replace("Roteiro em ", "")
+                .trim();
+              const slugCidade = nomeCidade
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[^a-z0-9-]/g, "");
 
-                      <p>{selecionarBandeiraPais(roteiroItem.pais_destino)}</p>
-                    </div>
-                  </h2>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Salvo em:{" "}
-                    {new Date(roteiroItem.data_criacao).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-800 line-clamp-3 mb-4">
-                    {roteiroItem.dados_roteiro?.introDescription ||
-                      "Nenhuma descrição disponível."}
-                  </p>
+              return (
+                <div
+                  key={roteiroItem.id}
+                  className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col justify-between animate-slideInUp"
+                >
+                  <div>
+                    <h2 className="text-xl font-bold text-[#851F92] mb-2 flex items-center">
+                      <MapPin size={24} className="mr-2 text-purple-700" />
+                      <div className="flex justify-center gap-2">
+                        <p>{nomeCidade}</p>
+                        <p>
+                          {selecionarBandeiraPais(roteiroItem.pais_destino)}
+                        </p>
+                      </div>
+                    </h2>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Salvo em:{" "}
+                      {new Date(roteiroItem.data_criacao).toLocaleDateString()}
+                    </p>
+                    <p className="text-gray-800 line-clamp-3 mb-4">
+                      {roteiroItem.dados_roteiro?.introDescription ||
+                        "Nenhuma descrição disponível."}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <button
+                      onClick={() => router.push(`/roteiro/${slugCidade}`)}
+                      className="flex items-center text-purple-600 hover:text-purple-800 font-semibold"
+                    >
+                      <Calendar size={18} className="mr-1" /> Ver Roteiro
+                    </button>
+                    <button
+                      onClick={() => handleRemoverRoteiro(roteiroItem.id)}
+                      className="text-red-500 hover:text-red-700 ml-4 flex items-center"
+                    >
+                      <Trash2 size={18} className="mr-1" /> Remover
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center mt-4">
-                  <button
-                    onClick={() => {
-                      toast.info(
-                        "Funcionalidade de visualizar roteiro completo não implementada ainda."
-                      );
-                    }}
-                    className="flex items-center text-purple-600 hover:text-purple-800 font-semibold"
-                  >
-                    <Calendar size={18} className="mr-1" /> Ver Roteiro
-                  </button>
-                  <button
-                    onClick={() => handleRemoverRoteiro(roteiroItem.id)}
-                    className="text-red-500 hover:text-red-700 ml-4 flex items-center"
-                  >
-                    <Trash2 size={18} className="mr-1" /> Remover
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
