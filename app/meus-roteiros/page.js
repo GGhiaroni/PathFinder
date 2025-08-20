@@ -2,7 +2,14 @@
 
 import { usuarioStore } from "@/store/usuarioStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
-import { Calendar, Home, MapPin, PlusCircle, Trash2 } from "lucide-react";
+import {
+  Calendar,
+  Heart,
+  Home,
+  MapPin,
+  PlusCircle,
+  Trash2,
+} from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -60,6 +67,44 @@ const MeusRoteiros = observer(() => {
     } catch (error) {
       console.error("Erro ao remover o roteiro: ", error);
       toast.error("Ocorreu um erro ao remover o roteiro.");
+    }
+  };
+
+  const handleToggleFavorito = async (roteiroId) => {
+    try {
+      const response = await fetch("/api/favoritar-roteiro", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: roteiroId,
+          usuarioId: usuarioStore.usuario.id,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success(
+          data.is_favorito
+            ? "Roteiro adicionando aos favoritos!"
+            : "Roteiro removido dos favoritos!"
+        );
+
+        setRoteirosSalvos((currentRoteiros) => {
+          return currentRoteiros.map((roteiro) => {
+            if (roteiro.id === roteiroId) {
+              return { ...roteiro, is_favorito: data.is_favorito };
+            }
+            return roteiro;
+          });
+        });
+      } else {
+        toast.error("Falha ao atualizar o status do roteiro.");
+      }
+    } catch (error) {
+      console.error("Erro ao favoritar o roteiro: ", error);
+      toast.error("Ocorreu um erro. Tente novamente.");
     }
   };
 
@@ -122,13 +167,29 @@ const MeusRoteiros = observer(() => {
                   className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col justify-between animate-slideInUp"
                 >
                   <div>
-                    <h2 className="text-xl font-bold text-[#851F92] mb-2 flex items-center">
-                      <MapPin size={24} className="mr-2 text-purple-700" />
-                      <div className="flex justify-center gap-2">
-                        <p>{nomeCidade}</p>
-                        <p>
-                          {selecionarBandeiraPais(roteiroItem.pais_destino)}
-                        </p>
+                    <h2 className="w-full text-xl font-bold text-[#851F92] mb-2 flex items-center justify-between">
+                      <div className="flex items-center">
+                        <MapPin size={24} className="mr-2 text-purple-700" />
+                        <div className="flex gap-2 items-center">
+                          <p>{nomeCidade}</p>
+                          <p>
+                            {selecionarBandeiraPais(roteiroItem.pais_destino)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => handleToggleFavorito(roteiroItem.id)}
+                        className="cursor-pointer"
+                      >
+                        {roteiroItem.is_favorito ? (
+                          <Heart
+                            size={22}
+                            className="text-red-500 fill-current"
+                          />
+                        ) : (
+                          <Heart size={22} className="text-gray-600" />
+                        )}
                       </div>
                     </h2>
                     <p className="text-gray-600 text-sm mb-4">
