@@ -27,9 +27,10 @@ const Hero = () => {
             href="/cadastre-se"
           />
           <BotaoEstilizado
-            titulo="Ver roteiros"
+            titulo="Faça seu login"
             estiloBotao="bg-white hover:bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold"
             estiloTexto="text-textoPreto hover:text-white"
+            href="/login"
           />
         </div>
       </div>
