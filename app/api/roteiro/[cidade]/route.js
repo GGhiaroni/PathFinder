@@ -3,7 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   try {
-    const { cidade } = params;
+    const { cidade } = await params;
+
+    const nomeParaBusca = cidade.replace(/-/g, " ");
+
     const { searchParams } = new URL(request.url);
     const usuarioId = searchParams.get("usuarioId");
 
@@ -22,7 +25,7 @@ export async function GET(request, { params }) {
         WHERE usuario_id = $1 AND titulo ILIKE $2;
         `;
 
-    const result = await client.query(query, [usuarioId, `%${cidade}%`]);
+    const result = await client.query(query, [usuarioId, `%${nomeParaBusca}%`]);
 
     client.release();
 
