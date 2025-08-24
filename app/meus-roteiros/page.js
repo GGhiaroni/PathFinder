@@ -7,6 +7,7 @@ import {
   Heart,
   Home,
   MapPin,
+  Pencil,
   PlusCircle,
   Trash2,
 } from "lucide-react";
@@ -178,18 +179,26 @@ const MeusRoteiros = observer(() => {
                         </div>
                       </div>
 
-                      <div
-                        onClick={() => handleToggleFavorito(roteiroItem.id)}
-                        className="cursor-pointer"
-                      >
-                        {roteiroItem.is_favorito ? (
-                          <Heart
-                            size={22}
-                            className="text-red-500 fill-current"
-                          />
-                        ) : (
-                          <Heart size={22} className="text-gray-600" />
-                        )}
+                      <div className="flex gap-2">
+                        <div
+                          onClick={() => handleEditarRoteiro(roteiroItem.id)}
+                          className="cursor-pointer"
+                        >
+                          <Pencil size={22} className="text-gray-600" />
+                        </div>
+                        <div
+                          onClick={() => handleToggleFavorito(roteiroItem.id)}
+                          className="cursor-pointer"
+                        >
+                          {roteiroItem.is_favorito ? (
+                            <Heart
+                              size={22}
+                              className="text-red-500 fill-current"
+                            />
+                          ) : (
+                            <Heart size={22} className="text-gray-600" />
+                          )}
+                        </div>
                       </div>
                     </h2>
                     <p className="text-gray-600 text-sm mb-4">
