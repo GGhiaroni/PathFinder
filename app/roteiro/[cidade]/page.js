@@ -65,12 +65,11 @@ const RoteiroSalvo = observer(() => {
   return (
     <section className="min-h-screen bg-gray-100 sm:px-6 lg:px-8 animate-fadeInScale">
       <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden">
-        <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-center">
+        <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-start">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1">
               {roteiro.titulo.replace("Roteiro em ", "")}
             </h1>
-            {console.log(roteiro)}
             <p className="text-gray-500 text-sm mb-2">
               {roteiro.titulo.replace("Roteiro em ", "")},{" "}
               {roteiro.pais_destino}
@@ -80,7 +79,8 @@ const RoteiroSalvo = observer(() => {
               {roteiro.dados_roteiro?.duration || "Duração não disponível"}
             </p>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center">
+
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex-shrink-0 flex items-center">
             <Pencil size={16} className="mr-2" />
             Editar Roteiro
           </button>
