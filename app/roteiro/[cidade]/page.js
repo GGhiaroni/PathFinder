@@ -1,7 +1,7 @@
 "use client";
 
 import { usuarioStore } from "@/store/usuarioStore";
-import { Calendar, MapPin, Pencil } from "lucide-react";
+import { Calendar, MapPin, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ const RoteiroSalvo = observer(() => {
 
   const [roteiro, setRoteiro] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roteiroEditavel, setRoteiroEditavel] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const fetchRoteiro = useCallback(async () => {
@@ -31,6 +32,7 @@ const RoteiroSalvo = observer(() => {
       if (response.ok) {
         const data = await response.json();
         setRoteiro(data);
+        setRoteiroEditavel(data);
       } else {
         toast.error("Roteiro não encontrado.");
         router.push("/meus-roteiros");
@@ -46,6 +48,39 @@ const RoteiroSalvo = observer(() => {
   useEffect(() => {
     fetchRoteiro();
   }, [fetchRoteiro]);
+
+  const handleSalvarAlteracoes = async () => {
+    console.log("Dados a serem salvos: ", roteiroEditavel);
+    toast.success("Roteiro salvo com sucesso!");
+    setIsEditing(false);
+    setRoteiro(roteiroEditavel);
+  };
+
+  const handleAlteracaoTitulo = (e) => {
+    setRoteiroEditavel({
+      ...roteiroEditavel,
+      titulo: e.target.value,
+    });
+  };
+
+  const handleAlteracaoDiasSubtitulo = (e, indexDia) => {
+    const novosDias = [...roteiroEditavel.dados_roteiro.days];
+    novosDias[indexDia].title = e.target.value;
+    setRoteiroEditavel({
+      ...roteiroEditavel,
+      dados_roteiro: { ...roteiroEditavel.dados_roteiro, days: novosDias },
+    });
+  };
+
+  const handleAlteracaoAtividades = (e, indexDia, indexAtividade) => {
+    const { name, value } = e.target;
+    const novosDias = [...roteiroEditavel.dados_roteiro.days];
+    novosDias[indexDia].activities[indexAtividade][name] = value;
+    setRoteiroEditavel({
+      ...roteiroEditavel,
+      dados_roteiro: { ...roteiroEditavel.dados_roteiro, days: novosDias },
+    });
+  };
 
   if (loading) {
     return (
@@ -64,111 +99,180 @@ const RoteiroSalvo = observer(() => {
 
   return (
     <section className="min-h-screen bg-gray-100 sm:px-6 lg:px-8 animate-fadeInScale">
-      <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden">
-        <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1">
-              {roteiro.titulo.replace("Roteiro em ", "")}
-            </h1>
-            <p className="text-gray-500 text-sm mb-2">
-              {roteiro.titulo.replace("Roteiro em ", "")},{" "}
-              {roteiro.pais_destino}
-            </p>
-            <p className="text-gray-300 text-sm">
-              {roteiro.dados_roteiro?.dates || "Datas não disponíveis"} &bull;{" "}
-              {roteiro.dados_roteiro?.duration || "Duração não disponível"}
-            </p>
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+        {!isEditing && (
+          <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-center rounded-t-2xl">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1">
+                {roteiro.titulo.replace("Roteiro em ", "")}
+              </h1>
+              <p className="text-gray-300 text-sm">
+                {roteiro.dados_roteiro?.dates || "Datas não disponíveis"} &bull;{" "}
+                {roteiro.dados_roteiro?.duration || "Duração não disponível"}
+              </p>
+            </div>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center"
+            >
+              <Pencil size={16} className="mr-2" />
+              Editar Roteiro
+            </button>
           </div>
+        )}
 
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex-shrink-0 flex items-center">
-            <Pencil size={16} className="mr-2" />
-            Editar Roteiro
-          </button>
-        </div>
+        {isEditing && (
+          <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-center rounded-t-2xl">
+            <input
+              type="text"
+              value={roteiroEditavel.titulo}
+              onChange={handleAlteracaoTitulo}
+              className="bg-gray-700 text-white text-3xl sm:text-4xl font-bold p-2 rounded-lg w-full mr-4 focus:outline-none"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleSalvarAlteracoes}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center"
+              >
+                <Save size={16} className="mr-2" />
+                Salvar
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center"
+              >
+                <X size={16} className="mr-2" />
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="p-6 sm:p-8">
-          {roteiro.dados_roteiro?.days.map((day, dayIndex) => (
+          {roteiroEditavel?.dados_roteiro?.days.map((day, dayIndex) => (
             <div key={dayIndex} className="relative mb-8">
-              {dayIndex < roteiro.dados_roteiro.days.length - 1 && (
-                <div className="absolute top-12 left-4 w-px h-full bg-gray-300 animate-expand"></div>
-              )}
+              {!isEditing &&
+                dayIndex < roteiroEditavel.dados_roteiro.days.length - 1 && (
+                  <div className="absolute top-12 left-4 w-px h-full bg-gray-300 animate-expand"></div>
+                )}
 
               <div className="flex items-start mb-6">
                 <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-800 border-2 border-white z-10">
                   <Calendar size={18} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 ml-4 -mt-1">
-                  {day.title}
-                  <p className="text-sm font-normal text-gray-500">
-                    {day.subtitle}
-                  </p>
-                </h3>
+                {!isEditing ? (
+                  <h3 className="text-xl font-bold text-gray-800 ml-4 -mt-1">
+                    {day.title}
+                    <p className="text-sm font-normal text-gray-500">
+                      {day.subtitle}
+                    </p>
+                  </h3>
+                ) : (
+                  <input
+                    type="text"
+                    value={day.title}
+                    onChange={(e) => handleDayTitleChange(e, dayIndex)}
+                    className="text-xl font-bold text-gray-800 ml-4 p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500"
+                  />
+                )}
               </div>
 
               <ul className="pl-12 space-y-6">
                 {day.activities.map((activity, activityIndex) => (
                   <li key={activityIndex} className="relative">
-                    <div className="absolute left-[-2.25rem] top-2 w-3 h-3 bg-gray-800 rounded-full z-10 animate-scaleIn"></div>
+                    {!isEditing && (
+                      <div className="absolute left-[-2.25rem] top-2 w-3 h-3 bg-gray-800 rounded-full z-10 animate-scaleIn"></div>
+                    )}
 
                     <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                      <p className="text-sm font-medium text-gray-500 mb-1">
-                        {activity.time}
-                      </p>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                        {activity.title}
-                      </h4>
-                      <p className="text-gray-700 text-sm mb-3">
-                        {activity.description}
-                      </p>
-
-                      <div className="flex items-center flex-wrap gap-2 mt-2 text-sm text-gray-600">
-                        {activity.location && (
-                          <span className="flex items-center gap-1">
-                            <MapPin size={14} className="text-gray-400" />{" "}
-                            {activity.location}
-                          </span>
-                        )}
-
-                        {activity.category && (
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold
-                            ${
-                              activity.category === "Gastronomia"
-                                ? "bg-orange-100 text-orange-600"
-                                : activity.category === "Cultura"
-                                ? "bg-blue-100 text-blue-600"
-                                : activity.category === "Natureza"
-                                ? "bg-green-100 text-green-600"
-                                : "bg-gray-200 text-gray-700"
-                            }`}
+                      {isEditing && (
+                        <div className="flex justify-end gap-2 mb-2">
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => {}}
                           >
-                            {activity.category}
-                          </span>
-                        )}
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      )}
 
-                        {activity.rating && (
-                          <span className="flex items-center gap-1">
-                            {Array(Math.floor(activity.rating))
-                              .fill()
-                              .map((_, i) => (
-                                <svg
-                                  key={i}
-                                  className="w-3 h-3 text-yellow-400 fill-current"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path d="M12 17.27l-5.18 3.52 1.9-6.09L2.56 10h6.44L12 3.53l3 6.47h6.44l-5.18 3.52 1.9 6.09z" />
-                                </svg>
-                              ))}
-                            {activity.rating}
-                          </span>
+                      <p className="text-sm font-medium text-gray-500 mb-1">
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            name="time"
+                            value={activity.time}
+                            onChange={(e) =>
+                              handleActivityChange(e, dayIndex, activityIndex)
+                            }
+                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-sm font-medium text-gray-800"
+                          />
+                        ) : (
+                          activity.time
                         )}
-                      </div>
+                      </p>
+
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            name="title"
+                            value={activity.title}
+                            onChange={(e) =>
+                              handleAlteracaoAtividades(
+                                e,
+                                dayIndex,
+                                activityIndex
+                              )
+                            }
+                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-lg font-semibold"
+                          />
+                        ) : (
+                          activity.title
+                        )}
+                      </h4>
+
+                      <p className="text-gray-700 text-sm mb-3">
+                        {isEditing ? (
+                          <textarea
+                            name="description"
+                            value={activity.description}
+                            onChange={(e) =>
+                              handleActivityChange(e, dayIndex, activityIndex)
+                            }
+                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-sm text-gray-800"
+                            rows="2"
+                          />
+                        ) : (
+                          activity.description
+                        )}
+                      </p>
                     </div>
                   </li>
                 ))}
+                {isEditing && (
+                  <button
+                    className="flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold transition-colors"
+                    onClick={() => {
+                      // TODO: Lógica para adicionar nova atividade
+                    }}
+                  >
+                    <Plus size={18} /> Adicionar Atividade
+                  </button>
+                )}
               </ul>
             </div>
           ))}
+          {isEditing && (
+            <button
+              className="flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold mt-8"
+              onClick={() => {
+                // TODO: Lógica para adicionar novo dia
+              }}
+            >
+              <Plus size={18} /> Adicionar Dia
+            </button>
+          )}
         </div>
       </div>
     </section>
