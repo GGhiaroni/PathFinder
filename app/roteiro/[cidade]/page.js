@@ -16,6 +16,31 @@ const RoteiroSalvo = observer(() => {
   const [loading, setLoading] = useState(true);
   const [roteiroEditavel, setRoteiroEditavel] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [backgroundImage, setBackgroundImage] = useState(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (roteiro) {
+        try {
+          const query = `${roteiro.titulo.replace("Roteiro em ", "")}, ${
+            roteiro.pais_destino
+          }`;
+          const response = await fetch(
+            `/api/gerar-imagem-unsplash?query=${encodeURIComponent(query)}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setBackgroundImage(data.imageUrl);
+          } else {
+            console.error("Falha ao carregar a imagem de fundo.");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar imagem de fundo:", error);
+        }
+      }
+    };
+    fetchImage();
+  }, [roteiro]);
 
   const fetchRoteiro = useCallback(async () => {
     if (!usuarioStore.usuario?.id) {
@@ -101,23 +126,35 @@ const RoteiroSalvo = observer(() => {
     <section className="min-h-screen bg-gray-100 sm:px-6 lg:px-8 animate-fadeInScale">
       <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
         {!isEditing && (
-          <div className="bg-gray-800 text-white p-6 sm:p-8 flex justify-between items-center rounded-t-2xl">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1">
-                {roteiro.titulo.replace("Roteiro em ", "")}
-              </h1>
-              <p className="text-gray-300 text-sm">
-                {roteiro.dados_roteiro?.dates || "Datas não disponíveis"} &bull;{" "}
-                {roteiro.dados_roteiro?.duration || "Duração não disponível"}
-              </p>
+          <div
+            className="relative p-6 sm:p-8 flex justify-between items-center rounded-t-2xl h-64 bg-cover bg-center bg-no-repeat transition-all duration-300"
+            style={{ backgroundImage: `url(${backgroundImage || ""})` }}
+          >
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+
+            <div className="relative z-10 flex flex-col justify-between items-start w-full h-full">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1 text-white drop-shadow-lg">
+                  {roteiro.titulo.replace("Roteiro em ", "")}
+                </h1>
+                <p className="text-gray-200 text-sm mb-2 drop-shadow-lg">
+                  {roteiro.titulo.replace("Roteiro em ", "")},{" "}
+                  {roteiro.pais_destino}
+                </p>
+                <p className="text-gray-300 text-sm drop-shadow-lg">
+                  {roteiro.dados_roteiro?.dates || "Datas não disponíveis"}{" "}
+                  &bull;{" "}
+                  {roteiro.dados_roteiro?.duration || "Duração não disponível"}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center mt-4 self-end"
+              >
+                <Pencil size={16} className="mr-2" />
+                Editar Roteiro
+              </button>
             </div>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors shadow-lg flex items-center"
-            >
-              <Pencil size={16} className="mr-2" />
-              Editar Roteiro
-            </button>
           </div>
         )}
 
