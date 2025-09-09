@@ -6,12 +6,14 @@ import { usuarioStore } from "@/store/usuarioStore";
 import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 const Perfil = observer(() => {
   const router = useRouter();
+  const dataInicioRef = useRef(null);
+  const dataFimRef = useRef(null);
 
   const {
     register,
@@ -26,6 +28,8 @@ const Perfil = observer(() => {
       orcamento: "",
       nome: null,
       idade: null,
+      dataInicio: "",
+      dataFim: "",
     },
   });
 
@@ -73,6 +77,16 @@ const Perfil = observer(() => {
   };
 
   const onSubmit = (data) => {
+    if (data.dataInicio && data.dataFim) {
+      const dataInicioObjeto = new Date(data.dataInicio);
+      const dataFimObjeto = new Date(data.dataFim);
+
+      if (dataFimObjeto < dataInicioObjeto) {
+        toast.error("A data de término deve ser posterior à data de início.");
+        return;
+      }
+    }
+
     const perfilCompleto = {
       nome: usuarioStore.nomeUsuario,
       idade: usuarioStore.idadeUsuario,
@@ -200,6 +214,50 @@ const Perfil = observer(() => {
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        <div className="w-full">
+          <h3 className="text-2xl font-bold mb-4 mt-4">
+            Datas da Viagem <span className="text-red-700">*</span>
+          </h3>
+          <div className="flex flex-col md:flex-row gap-4 w-full">
+            <div
+              onClick={() => dataInicioRef.current?.showPicker()}
+              className="flex flex-col flex-1"
+            >
+              <label
+                htmlFor="dataInicio"
+                className="font-semibold text-gray-700 mb-2"
+              >
+                Data de Início:
+              </label>
+              <input
+                type="date"
+                id="dataInicio"
+                ref={dataInicioRef}
+                {...register("dataInicio", { required: true })}
+                className="bg-gray-200 text-gray-800 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#851F92] transition-all"
+              />
+            </div>
+            <div
+              onClick={() => dataFimRef.current?.showPicker()}
+              className="flex flex-col flex-1"
+            >
+              <label
+                htmlFor="dataFim"
+                className="font-semibold text-gray-700 mb-2"
+              >
+                Data de Término:
+              </label>
+              <input
+                type="date"
+                id="dataFim"
+                ref={dataFimRef}
+                {...register("dataFim", { required: true })}
+                className="bg-gray-200 text-gray-800 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#851F92] transition-all"
+              />
+            </div>
           </div>
         </div>
 
