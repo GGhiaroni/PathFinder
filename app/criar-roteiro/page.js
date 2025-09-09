@@ -92,6 +92,8 @@ const Perfil = observer(() => {
       idade: usuarioStore.idadeUsuario,
       interesses: data.interesses,
       orcamento: data.orcamento,
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
     };
 
     toast.success("Perfil criado com sucesso!");
