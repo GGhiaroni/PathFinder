@@ -6,21 +6,25 @@ class PerfilStore {
   interesses = [];
   orcamento = "";
   roteiro = "";
-  sugestoesDestino = [];
+  sugestoesDestino = null;
   destinoEscolhido = "";
   paisDestinoEscolhido = "";
   roteirosSalvos = [];
+  dataInicio = "";
+  dataFim = "";
 
   constructor() {
     makeAutoObservable(this);
     this.addSalvarRoteiro = this.addSalvarRoteiro.bind(this);
   }
 
-  setPerfil({ nome, idade, interesses, orcamento }) {
+  setPerfil({ nome, idade, interesses, orcamento, dataInicio, dataFim }) {
     this.nome = nome;
     this.idade = idade;
     this.interesses = interesses;
     this.orcamento = orcamento;
+    this.dataInicio = dataInicio;
+    this.dataFim = dataFim;
   }
 
   setRoteiro(roteiro) {
@@ -70,10 +74,12 @@ class PerfilStore {
     this.interesses = [];
     this.orcamento = "";
     this.roteiro = "";
-    this.sugestoesDestino = [];
+    this.sugestoesDestino = null;
     this.destinoEscolhido = "";
     this.paisDestinoEscolhido = "";
     this.roteirosSalvos = [];
+    this.dataInicio = "";
+    this.dataFim = "";
   }
 }
 

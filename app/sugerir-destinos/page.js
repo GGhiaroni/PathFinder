@@ -21,7 +21,7 @@ const SugerirDestinos = observer(() => {
       router.push("/roteiro");
       return;
     }
-    if (sugestoesDestino.length === 0 && nome) {
+    if (sugestoesDestino !== null && sugestoesDestino.length === 0) {
       toast.error(
         "Não foi possível gerar sugestões de destino. Tente novamente."
       );
@@ -40,7 +40,7 @@ const SugerirDestinos = observer(() => {
     router.push("/loading");
   };
 
-  if (sugestoesDestino.length === 0) {
+  if (sugestoesDestino === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-50 to-fuchsia-100">
         <p className="text-xl text-gray-600">

@@ -1,4 +1,5 @@
 export async function gerarRoteiroClient(data) {
+  console.log("Dados gerarRoteiroClient:", data);
   const response = await fetch("/api/gerar", {
     method: "POST",
     headers: {

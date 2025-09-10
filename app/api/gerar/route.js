@@ -1,5 +1,3 @@
-console.log(process.env.OPEN_API_KEY);
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 

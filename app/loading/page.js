@@ -32,13 +32,16 @@ const Loading = observer(() => {
 
       if (perfilStore.destinoEscolhido) {
         try {
-          const novoRoteiro = await gerarRoteiroClient({
+          const dadosParaGerar = {
             nome: usuarioStore.nomeUsuario,
             idade: usuarioStore.idadeUsuario,
             interesses: perfilStore.interesses,
             orcamento: perfilStore.orcamento,
             destino: perfilStore.destinoEscolhido,
-          });
+            dataInicio: perfilStore.dataInicio,
+            dataFim: perfilStore.dataFim,
+          };
+          const novoRoteiro = await gerarRoteiroClient(dadosParaGerar);
           perfilStore.setRoteiro(novoRoteiro);
           router.push("/roteiro");
         } catch (error) {
@@ -47,13 +50,15 @@ const Loading = observer(() => {
           perfilStore.reset();
           router.push("/perfil");
         }
-      } else if (perfilStore.sugestoesDestino.length === 0) {
+      } else if (perfilStore.sugestoesDestino === null) {
         try {
           console.log("Chamando API com os seguintes dados:", {
             nome: usuarioStore.nomeUsuario,
             idade: usuarioStore.idadeUsuario,
             interesses: perfilStore.interesses,
             orcamento: perfilStore.orcamento,
+            dataInicio: perfilStore.dataInicio,
+            dataFim: perfilStore.dataFim,
           });
 
           const sugestoes = await sugerirDestinosClient({
@@ -61,6 +66,8 @@ const Loading = observer(() => {
             idade: usuarioStore.idadeUsuario,
             interesses: perfilStore.interesses,
             orcamento: perfilStore.orcamento,
+            dataInicio: perfilStore.dataInicio,
+            dataFim: perfilStore.dataFim,
           });
           perfilStore.setSugestoesDestino(sugestoes);
           router.push("/sugerir-destinos");

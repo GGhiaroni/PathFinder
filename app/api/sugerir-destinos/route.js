@@ -22,7 +22,10 @@ export async function POST(req) {
     const { nome, idade, interesses, orcamento } = body;
 
     if (!nome || !idade || !interesses || !orcamento) {
-      return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Dados incompletos", error },
+        { status: 400 }
+      );
     }
 
     const prompt = `Com base no seguinte perfil, sugira 6 destinos de viagem. Para cada destino, dê um breve motivo pelo qual ele seria interessante para o perfil, em UMA frase. Liste os destinos numerados e formatados como:

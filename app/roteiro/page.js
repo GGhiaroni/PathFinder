@@ -137,6 +137,8 @@ const Roteiro = observer(() => {
       titulo: `Roteiro em ${perfilStore.destinoEscolhido}`,
       dadosRoteiro: dadosRoteiroParsed,
       paisDestino: perfilStore.paisDestinoEscolhido,
+      dataInicio: perfilStore.dataInicio,
+      dataFim: perfilStore.dataFim,
     };
 
     console.log("Dados que serão enviados para a API: ", dadosParaSalvar);
