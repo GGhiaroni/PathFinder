@@ -131,10 +131,10 @@ const RoteiroSalvo = observer(() => {
 
   return (
     <section className="min-h-screen bg-gray-100 sm:px-6 lg:px-8 animate-fadeInScale">
-      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden">
         {!isEditing && (
           <div
-            className="relative p-6 sm:p-8 flex justify-between items-center rounded-t-2xl h-64 bg-cover bg-center bg-no-repeat transition-all duration-300"
+            className="relative p-6 sm:p-8 flex justify-between items-center h-64 bg-cover bg-center bg-no-repeat transition-all duration-300"
             style={{ backgroundImage: `url(${backgroundImage || ""})` }}
           >
             <div className="absolute inset-0 bg-black opacity-50"></div>
