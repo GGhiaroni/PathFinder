@@ -122,6 +122,13 @@ const RoteiroSalvo = observer(() => {
     return null;
   }
 
+  const dataInicioRoteiro = new Date(roteiro.data_inicio);
+  const dataInicioRoteiroFormatada =
+    dataInicioRoteiro.toLocaleDateString("pt-BR");
+
+  const dataFimRoteiro = new Date(roteiro.data_fim);
+  const dataFimRoteiroFormatada = dataFimRoteiro.toLocaleDateString("pt-BR");
+
   return (
     <section className="min-h-screen bg-gray-100 sm:px-6 lg:px-8 animate-fadeInScale">
       <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
@@ -142,10 +149,10 @@ const RoteiroSalvo = observer(() => {
                   {roteiro.pais_destino}
                 </p>
                 <p className="text-gray-300 text-sm drop-shadow-lg">
-                  {roteiro.dados_roteiro?.dates || "Datas não disponíveis"}{" "}
-                  &bull;{" "}
-                  {roteiro.dados_roteiro?.duration || "Duração não disponível"}
+                  🗓️ {dataInicioRoteiroFormatada} a {dataFimRoteiroFormatada}{" "}
+                  &bull; {roteiro.total_dias || "Duração não disponível"} dias
                 </p>
+                {console.log(roteiro)}
               </div>
               <button
                 onClick={() => setIsEditing(true)}
@@ -290,9 +297,7 @@ const RoteiroSalvo = observer(() => {
                 {isEditing && (
                   <button
                     className="flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold transition-colors"
-                    onClick={() => {
-                      // TODO: Lógica para adicionar nova atividade
-                    }}
+                    onClick={() => {}}
                   >
                     <Plus size={18} /> Adicionar Atividade
                   </button>
@@ -303,9 +308,7 @@ const RoteiroSalvo = observer(() => {
           {isEditing && (
             <button
               className="flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold mt-8"
-              onClick={() => {
-                // TODO: Lógica para adicionar novo dia
-              }}
+              onClick={() => {}}
             >
               <Plus size={18} /> Adicionar Dia
             </button>
