@@ -1,5 +1,7 @@
 "use client";
 
+import BotaoRedirectMeusRoteiros from "@/components/ BotaoRedirectMeusRoteiros";
+import BotaoRedirectHome from "@/components/BotaoRedirectHome";
 import { usuarioStore } from "@/store/usuarioStore";
 import { Calendar, MapPin, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -194,7 +196,7 @@ const RoteiroSalvo = observer(() => {
 
         <div className="p-6 sm:p-8">
           {roteiroEditavel?.dados_roteiro?.days.map((day, dayIndex) => (
-            <div key={dayIndex} className="relative mb-8">
+            <div key={dayIndex} className="relative mb-4">
               {!isEditing &&
                 dayIndex < roteiroEditavel.dados_roteiro.days.length - 1 && (
                   <div className="absolute top-12 left-4 w-px h-full bg-gray-300 animate-expand"></div>
@@ -313,6 +315,10 @@ const RoteiroSalvo = observer(() => {
               <Plus size={18} /> Adicionar Dia
             </button>
           )}
+        </div>
+        <div className="flex justify-center flex-col gap-4 mx-4 mb-6">
+          <BotaoRedirectMeusRoteiros />
+          <BotaoRedirectHome />
         </div>
       </div>
     </section>
