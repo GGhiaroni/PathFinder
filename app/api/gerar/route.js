@@ -32,7 +32,6 @@ export async function POST(req) {
     const dataFimObjeto = new Date(dataFim);
     const diferencaEmTempo =
       dataFimObjeto.getTime() - dataInicioObjeto.getTime();
-
     const totalDias = Math.ceil(diferencaEmTempo / (1000 * 60 * 60 * 24));
 
     if (totalDias < 1) {
@@ -44,25 +43,63 @@ export async function POST(req) {
       );
     }
 
-    const prompt = `Crie um roteiro personalizado de viagem com base no seguinte perfil:
-      - Nome: ${nome}
-      - Idade: ${idade}
-      - Interesses: ${interesses.join(", ")}
-      - Orçamento: ${orcamento}
-      - Destino: ${destino}
-      - Total de dias da viagem: ${totalDias}
-    
-      Dê sugestões de atividades diárias (manhã, tarde e noite), e pontos turísticos
-      específicos para **${destino}** com base nos interesses e orçamento. Seja criativo,
-      direto e empolgante. Considere um roteiro de ${totalDias} dias e foque em dar uma visão
-      geral bem estruturada com dicas diárias.
+    const prompt = `Crie um roteiro personalizado de viagem em formato JSON para um roteiro personalizado.
+      O roteiro é para ${nome}, de ${idade} anos, com interesses em ${interesses.join(
+      ", "
+    )}.
+      O orçamento é ${orcamento}. O roteiro deve ser para o destino: ${destino}.
+      A viagem será de ${totalDias} dias.
+
+      O formato JSON deve seguir este padrão:
+      {
+        "title": "...",
+        "intro": "...",
+        "days": [
+          {
+            "title": "Dia 1: ...",
+            "activities": [
+              {
+                "time": "HH:mm",
+                "title": "...",
+                "description": "...",
+                "category": "Cultura", // ou Gastronomia, Natureza, Aventura, etc.
+                "rating": 4.5,
+                "address": "..."
+              },
+              ...
+            ]
+          },
+          ...
+        ],
+        "tips": ["...", "..."]
+      }
+
+      Não inclua nenhum texto adicional, apenas a string JSON completa. Se o roteiro não puder ser gerado, retorne uma mensagem de erro em formato JSON: {"error": "Mensagem de erro"}.
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const roteiro = response.text();
+    const textResponse = response.text();
 
-    return NextResponse.json({ roteiro });
+    const jsonMatch = textResponse.match(/```json\n([\s\S]*)\n```/);
+    let jsonString = jsonMatch ? jsonMatch[1].trim() : textResponse.trim();
+
+    let roteiroObjeto;
+    try {
+      roteiroObjeto = JSON.parse(jsonString);
+    } catch (parseError) {
+      console.error("Erro ao analisar JSON da resposta do Gemini:", parseError);
+      return NextResponse.json(
+        { error: "Resposta inválida do serviço de IA." },
+        { status: 500 }
+      );
+    }
+
+    if (roteiroObjeto.error) {
+      return NextResponse.json({ error: roteiroObjeto.error }, { status: 500 });
+    }
+
+    return NextResponse.json({ roteiro: roteiroObjeto });
   } catch (error) {
     console.error("Erro ao gerar roteiro com Gemini:", error);
     return NextResponse.json(
