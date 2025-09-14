@@ -24,10 +24,22 @@ const Roteiro = observer(() => {
   const [parsedRoteiro, setParsedRoteiro] = useState(null);
   const [roteiroJaSalvo, setRoteiroJaSalvo] = useState(false);
 
-  const parseRoteiroContent = useCallback((markdownText) => {
-    if (!markdownText) return null;
+  const parseRoteiroContent = useCallback((data) => {
+    if (!data) return null;
 
-    const lines = markdownText.split("\n").filter((line) => line.trim() !== "");
+    try {
+      const parsedJson = JSON.parse(data);
+
+      if (parsedJson.days || parsedJson.tips || parsedJson.mainTitle) {
+        return parsedJson;
+      }
+    } catch (error) {
+      console.error(
+        "Não foi possível interpretar como JSON, tentando fallback para Markdown..."
+      );
+    }
+
+    const lines = data.split("\n").filter((line) => line.trim() !== "");
 
     let parsed = {
       mainTitle: "",
