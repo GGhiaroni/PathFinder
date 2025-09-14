@@ -3,6 +3,10 @@ import { MapPin } from "lucide-react";
 import EstrelaAvaliaçãoAtividade from "./EstrelaAvaliaçãoAtividade";
 
 export const CardAtividade = ({ atividade }) => {
+  const categorias = (atividade.category || "Geral")
+    .split("/")
+    .map((c) => c.trim());
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-start gap-4">
       <div className="w-24 flex-shrink-0 text-sm text-gray-500">
@@ -32,14 +36,17 @@ export const CardAtividade = ({ atividade }) => {
             </div>
           </div>
 
-          <div className="ml-4">
-            <span
-              className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${badgeCategoriasClasses(
-                atividade.category
-              )}`}
-            >
-              {atividade.category || "Geral"}
-            </span>
+          <div className="ml-4 flex flex-wrap gap-2">
+            {categorias.map((categoria, index) => (
+              <span
+                key={index}
+                className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${badgeCategoriasClasses(
+                  categoria
+                )}`}
+              >
+                {categoria}
+              </span>
+            ))}
           </div>
         </div>
       </div>
