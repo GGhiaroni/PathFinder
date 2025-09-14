@@ -1,4 +1,6 @@
+import { badgeCategoriasClasses } from "@/utils/badgeCategoriasAtividades";
 import { MapPin } from "lucide-react";
+import EstrelaAvaliaçãoAtividade from "./EstrelaAvaliaçãoAtividade";
 
 export const CardAtividade = ({ atividade }) => {
   return (
@@ -26,13 +28,13 @@ export const CardAtividade = ({ atividade }) => {
                   <span>{atividade.address}</span>
                 </div>
               )}
-              <StarRating value={atividade.rating || 0} />
+              <EstrelaAvaliaçãoAtividade value={atividade.rating || 0} />
             </div>
           </div>
 
           <div className="ml-4">
             <span
-              className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${badgeClasses(
+              className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${badgeCategoriasClasses(
                 atividade.category
               )}`}
             >

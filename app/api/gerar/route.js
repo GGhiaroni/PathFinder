@@ -43,39 +43,42 @@ export async function POST(req) {
       );
     }
 
-    const prompt = `Crie um roteiro personalizado de viagem em formato JSON para um roteiro personalizado.
-      O roteiro é para ${nome}, de ${idade} anos, com interesses em ${interesses.join(
-      ", "
-    )}.
-      O orçamento é ${orcamento}. O roteiro deve ser para o destino: ${destino}.
-      A viagem será de ${totalDias} dias.
+    const prompt = `
+  Gere um roteiro de viagem em formato JSON.
 
-      O formato JSON deve seguir este padrão:
+  Dados:
+  - Nome: ${nome}
+  - Idade: ${idade}
+  - Interesses: ${interesses.join(", ")}
+  - Orçamento: ${orcamento}
+  - Destino: ${destino}
+  - Duração: ${totalDias} dias
+
+  A resposta deve ser **somente a string JSON**, sem aspas extras, blocos de código ou comentários. O objeto deve seguir o padrão:
+  {
+    "title": "Um título para o roteiro",
+    "intro": "Uma breve introdução",
+    "days": [
       {
-        "title": "...",
-        "intro": "...",
-        "days": [
+        "title": "Dia 1: Exemplo de Título",
+        "activities": [
           {
-            "title": "Dia 1: ...",
-            "activities": [
-              {
-                "time": "HH:mm",
-                "title": "...",
-                "description": "...",
-                "category": "Cultura", // ou Gastronomia, Natureza, Aventura, etc.
-                "rating": 4.5,
-                "address": "..."
-              },
-              ...
-            ]
+            "time": "09:00",
+            "title": "Exemplo de Atividade",
+            "description": "Uma descrição detalhada.",
+            "category": "Cultura",
+            "rating": 4.5,
+            "address": "Endereço da atividade"
           },
           ...
-        ],
-        "tips": ["...", "..."]
-      }
-
-      Não inclua nenhum texto adicional, apenas a string JSON completa. Se o roteiro não puder ser gerado, retorne uma mensagem de erro em formato JSON: {"error": "Mensagem de erro"}.
-    `;
+        ]
+      },
+      ...
+    ],
+    "tips": ["Dica 1", "Dica 2"]
+  }
+  Se não for possível gerar o roteiro, retorne: {"error": "Desculpe, não foi possível gerar um roteiro com esses dados."}.
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

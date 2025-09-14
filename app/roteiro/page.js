@@ -1,19 +1,13 @@
 "use client";
 
+import { CardAtividade } from "@/components/CardAtividade";
 import perfilStore from "@/store/perfilStore";
 import { usuarioStore } from "@/store/usuarioStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
-import {
-  AlarmClock,
-  Calendar,
-  Info,
-  MapPin,
-  PlusCircle,
-  Save,
-} from "lucide-react";
+import { Calendar, Info, MapPin, PlusCircle, Save } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Roteiro = observer(() => {
@@ -21,113 +15,14 @@ const Roteiro = observer(() => {
 
   const { roteiro, nome, destinoEscolhido, paisDestinoEscolhido } = perfilStore;
 
-  const [parsedRoteiro, setParsedRoteiro] = useState(null);
   const [roteiroJaSalvo, setRoteiroJaSalvo] = useState(false);
-
-  const parseRoteiroContent = useCallback((data) => {
-    if (!data) return null;
-
-    try {
-      const parsedJson = JSON.parse(data);
-
-      if (parsedJson.days || parsedJson.tips || parsedJson.mainTitle) {
-        return parsedJson;
-      }
-    } catch (error) {
-      console.error(
-        "Não foi possível interpretar como JSON, tentando fallback para Markdown..."
-      );
-    }
-
-    const lines = data.split("\n").filter((line) => line.trim() !== "");
-
-    let parsed = {
-      mainTitle: "",
-      introDescription: "",
-      days: [],
-      tips: [],
-    };
-
-    let currentDay = null;
-    let inTipsSection = false;
-    let introDescriptionFound = false;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-
-      if (line.startsWith("## ")) {
-        parsed.mainTitle = line.replace("## ", "").trim();
-        inTipsSection = false;
-      } else if (line.startsWith("**Dia ")) {
-        if (currentDay) {
-          parsed.days.push(currentDay);
-        }
-
-        let dayTitle = line.replace(/\*\*/g, "").trim();
-
-        currentDay = {
-          title: dayTitle,
-          activities: [],
-        };
-        inTipsSection = false;
-        introDescriptionFound = true;
-      } else if (line.startsWith("**Dicas Adicionais:**")) {
-        if (currentDay) {
-          parsed.days.push(currentDay);
-          currentDay = null;
-        }
-        inTipsSection = true;
-      } else if (line.startsWith("* ")) {
-        if (inTipsSection) {
-          parsed.tips.push(line.replace("* ", "").trim());
-        } else if (currentDay) {
-          const activityLine = line.replace("* ", "");
-          const match = activityLine.match(/\*\*(.*?)\*\*:\s*(.*)/);
-          if (match && match[1] && match[2]) {
-            currentDay.activities.push({
-              time: match[1].trim(),
-              description: match[2].replace(/\*\*/g, "").trim(),
-            });
-          } else {
-            const firstColonIndex = activityLine.indexOf(":");
-            if (firstColonIndex !== -1) {
-              currentDay.activities.push({
-                time: activityLine
-                  .substring(0, firstColonIndex)
-                  .replace(/\*\*/g, "")
-                  .trim(),
-                description: activityLine
-                  .substring(firstColonIndex + 1)
-                  .replace(/\*\*/g, "")
-                  .trim(),
-              });
-            } else {
-              currentDay.activities.push({
-                time: "Atividade",
-                description: activityLine.replace(/\*\*/g, "").trim(),
-              });
-            }
-          }
-        }
-      } else if (!introDescriptionFound && line.length > 0) {
-        parsed.introDescription = line.replace(/\*\*/g, "").trim();
-        introDescriptionFound = true;
-      }
-    }
-    if (currentDay) {
-      parsed.days.push(currentDay);
-    }
-    return parsed;
-  }, []);
 
   useEffect(() => {
     if (!roteiro || !nome || !destinoEscolhido) {
       router.push("/perfil");
       return;
     }
-    const parsed = parseRoteiroContent(roteiro);
-    setParsedRoteiro(parsed);
-  }, [roteiro, nome, router, destinoEscolhido, parseRoteiroContent]);
+  }, [roteiro, nome, router, destinoEscolhido]);
 
   const handleSalvarRoteiro = async () => {
     if (!usuarioStore.usuario?.id) {
@@ -137,17 +32,15 @@ const Roteiro = observer(() => {
       return;
     }
 
-    const dadosRoteiroParsed = parseRoteiroContent(perfilStore.roteiro);
-
-    if (!dadosRoteiroParsed) {
+    if (!perfilStore.roteiro) {
       toast.error("Nenhum roteiro válido para salvar.");
       return;
     }
 
     const dadosParaSalvar = {
       usuarioId: usuarioStore.usuario.id,
-      titulo: `Roteiro em ${perfilStore.destinoEscolhido}`,
-      dadosRoteiro: dadosRoteiroParsed,
+      titulo: perfilStore.roteiro.title,
+      dadosRoteiro: perfilStore.roteiro,
       paisDestino: perfilStore.paisDestinoEscolhido,
       dataInicio: perfilStore.dataInicio,
       dataFim: perfilStore.dataFim,
@@ -177,7 +70,7 @@ const Roteiro = observer(() => {
     }
   };
 
-  if (!parsedRoteiro) {
+  if (!roteiro) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-fuchsia-100 text-gray-700 p-6">
         <div className="animate-spin-slow text-[#851F92] mb-4">
@@ -209,21 +102,21 @@ const Roteiro = observer(() => {
             )}
           </h1>
 
-          {parsedRoteiro.mainTitle && (
+          {roteiro.title && (
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
-              {parsedRoteiro.mainTitle}
+              {roteiro.title}
             </h2>
           )}
 
-          {parsedRoteiro.introDescription && (
+          {roteiro.intro && (
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-              {parsedRoteiro.introDescription}
+              {roteiro.intro}
             </p>
           )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {parsedRoteiro.days.map((day, dayIndex) => (
+          {roteiro.days.map((day, dayIndex) => (
             <div
               key={dayIndex}
               className="bg-purple-50 p-6 rounded-xl shadow-md border border-purple-100 flex flex-col animate-slideInUp"
@@ -235,7 +128,7 @@ const Roteiro = observer(() => {
                   className="mr-3 text-purple-700 flex-shrink-0"
                 />
                 <span className="leading-tight flex flex-col">
-                  {day.title.split(":").map((part, idx, arr) => (
+                  {day.title.split(":").map((part, idx) => (
                     <span
                       key={idx}
                       className={
@@ -252,31 +145,19 @@ const Roteiro = observer(() => {
               </h3>
 
               <ul className="space-y-4 flex-grow mt-4">
-                {" "}
                 {day.activities.map((activity, activityIndex) => (
-                  <li
-                    key={activityIndex}
-                    className="text-gray-700 p-3 rounded-lg list-item-hover-bg"
-                  >
-                    <strong className="text-gray-900 text-lg flex items-center mb-1">
-                      <AlarmClock size={18} className="mr-2 text-gray-500" />
-                      {activity.time}
-                    </strong>
-                    <p className="text-base leading-relaxed pl-7">
-                      {activity.description}
-                    </p>
-                  </li>
+                  <CardAtividade key={activityIndex} atividade={activity} />
                 ))}
               </ul>
             </div>
           ))}
         </div>
 
-        {parsedRoteiro.tips.length > 0 && (
+        {roteiro.tips.length > 0 && (
           <div
             className="mt-12 bg-blue-50 p-8 rounded-xl shadow-md border border-blue-100 animate-slideInUp"
             style={{
-              animationDelay: `${parsedRoteiro.days.length * 0.1 + 0.2}s`,
+              animationDelay: `${roteiro.days.length * 0.1 + 0.2}s`,
             }}
           >
             {" "}
@@ -285,7 +166,7 @@ const Roteiro = observer(() => {
               Dicas Adicionais
             </h3>
             <ul className="list-none pl-0 space-y-3 text-gray-700">
-              {parsedRoteiro.tips.map((tip, index) => (
+              {roteiro.tips.map((tip, index) => (
                 <li key={index} className="flex items-start">
                   <span className="text-blue-600 mr-3 text-xl leading-none">
                     &bull;

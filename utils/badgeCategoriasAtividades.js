@@ -10,6 +10,10 @@ export function badgeCategoriasClasses(categoria) {
       return "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100";
     case "esportes":
       return "bg-lime-50 text-lime-700 border-lime-100";
+    case "vida noturna":
+      return "bg-violet-50 text-violet-700 border-violet-100";
+    case "compras":
+      return "bg-pink-50 text-pink-700 border-pink-100";
     default:
       return "bg-gray-100 text-gray-700 border-gray-100";
   }
