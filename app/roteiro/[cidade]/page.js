@@ -139,7 +139,7 @@ const RoteiroSalvo = observer(() => {
             className="relative p-6 sm:p-8 flex justify-between items-center h-64 bg-cover bg-center bg-no-repeat transition-all duration-300"
             style={{ backgroundImage: `url(${backgroundImage || ""})` }}
           >
-            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="absolute inset-0 bg-black opacity-70"></div>
 
             <div className="relative z-10 flex flex-col justify-between items-start w-full h-full">
               <div>
@@ -150,11 +150,10 @@ const RoteiroSalvo = observer(() => {
                   {roteiro.titulo.replace("Roteiro em ", "")},{" "}
                   {roteiro.pais_destino}
                 </p>
-                <p className="text-gray-300 text-sm drop-shadow-lg">
+                <p className="text-white text-sm drop-shadow-lg font-bold">
                   🗓️ {dataInicioRoteiroFormatada} a {dataFimRoteiroFormatada}{" "}
                   &bull; {roteiro.total_dias || "Duração não disponível"} dias
                 </p>
-                {console.log(roteiro)}
               </div>
               <button
                 onClick={() => setIsEditing(true)}
