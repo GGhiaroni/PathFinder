@@ -7,6 +7,8 @@ export const CardAtividade = ({ atividade }) => {
     .split("/")
     .map((c) => c.trim());
 
+  const avaliacaoFloat = parseFloat(atividade.rating || 0);
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-start gap-4">
       <div className="w-24 flex-shrink-0 text-sm text-gray-500">
@@ -32,7 +34,7 @@ export const CardAtividade = ({ atividade }) => {
                   <span>{atividade.address}</span>
                 </div>
               )}
-              <EstrelaAvaliaçãoAtividade value={atividade.rating || 0} />
+              <EstrelaAvaliaçãoAtividade value={avaliacaoFloat} />
             </div>
           </div>
 

@@ -77,8 +77,9 @@ export async function POST(req) {
     ],
     "tips": ["Dica 1", "Dica 2"]
   }
+    ATENÇÃO: O campo "rating" JAMAIS deve ser null ou 0.
   Se não for possível gerar o roteiro, retorne: {"error": "Desculpe, não foi possível gerar um roteiro com esses dados."}.
-`;
+  `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -102,6 +103,7 @@ export async function POST(req) {
       return NextResponse.json({ error: roteiroObjeto.error }, { status: 500 });
     }
 
+    console.log(roteiroObjeto.days[0].activities);
     return NextResponse.json({ roteiro: roteiroObjeto });
   } catch (error) {
     console.error("Erro ao gerar roteiro com Gemini:", error);
