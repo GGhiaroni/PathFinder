@@ -2,8 +2,9 @@
 
 import BotaoRedirectMeusRoteiros from "@/components/ BotaoRedirectMeusRoteiros";
 import BotaoRedirectHome from "@/components/BotaoRedirectHome";
+import { CardAtividade } from "@/components/CardAtividade";
 import { usuarioStore } from "@/store/usuarioStore";
-import { Calendar, MapPin, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { Calendar, MapPin, Pencil, Plus, Save, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -225,84 +226,9 @@ const RoteiroSalvo = observer(() => {
               <ul className="pl-12 space-y-6">
                 {day.activities.map((activity, activityIndex) => (
                   <li key={activityIndex} className="relative">
-                    {!isEditing && (
-                      <div className="absolute left-[-2.25rem] top-2 w-3 h-3 bg-gray-800 rounded-full z-10 animate-scaleIn"></div>
-                    )}
-
-                    <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                      {isEditing && (
-                        <div className="flex justify-end gap-2 mb-2">
-                          <button
-                            className="text-red-500 hover:text-red-700"
-                            onClick={() => {}}
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      )}
-
-                      <p className="text-sm font-medium text-gray-500 mb-1">
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            name="time"
-                            value={activity.time}
-                            onChange={(e) =>
-                              handleActivityChange(e, dayIndex, activityIndex)
-                            }
-                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-sm font-medium text-gray-800"
-                          />
-                        ) : (
-                          activity.time
-                        )}
-                      </p>
-
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            name="title"
-                            value={activity.title}
-                            onChange={(e) =>
-                              handleAlteracaoAtividades(
-                                e,
-                                dayIndex,
-                                activityIndex
-                              )
-                            }
-                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-lg font-semibold"
-                          />
-                        ) : (
-                          activity.title
-                        )}
-                      </h4>
-
-                      <p className="text-gray-700 text-sm mb-3">
-                        {isEditing ? (
-                          <textarea
-                            name="description"
-                            value={activity.description}
-                            onChange={(e) =>
-                              handleActivityChange(e, dayIndex, activityIndex)
-                            }
-                            className="w-full p-1 rounded-md border-2 border-gray-300 focus:outline-none focus:border-purple-500 text-sm text-gray-800"
-                            rows="2"
-                          />
-                        ) : (
-                          activity.description
-                        )}
-                      </p>
-                    </div>
+                    <CardAtividade atividade={activity} />
                   </li>
                 ))}
-                {isEditing && (
-                  <button
-                    className="flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold transition-colors"
-                    onClick={() => {}}
-                  >
-                    <Plus size={18} /> Adicionar Atividade
-                  </button>
-                )}
               </ul>
             </div>
           ))}
