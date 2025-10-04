@@ -157,10 +157,7 @@ const MeusRoteiros = observer(() => {
               const nomeCidade = roteiroItem.titulo
                 .replace("Roteiro em ", "")
                 .trim();
-              const slugCidade = nomeCidade
-                .toLowerCase()
-                .replace(/\s+/g, "-")
-                .replace(/[^a-z0-9-]/g, "");
+              const slugRoteiro = roteiroItem.slug;
 
               return (
                 <div
@@ -212,11 +209,12 @@ const MeusRoteiros = observer(() => {
                   </div>
                   <div className="flex justify-between items-center mt-4">
                     <button
-                      onClick={() => router.push(`/roteiro/${slugCidade}`)}
+                      onClick={() => router.push(`/roteiro/${slugRoteiro}`)}
                       className="flex items-center text-purple-600 hover:text-purple-800 font-semibold"
                     >
                       <Calendar size={18} className="mr-1" /> Ver Roteiro
-                    </button>
+                    </button>{" "}
+                    {console.log(roteiroItem)}
                     <button
                       onClick={() => handleRemoverRoteiro(roteiroItem.id)}
                       className="text-red-500 hover:text-red-700 ml-4 flex items-center"

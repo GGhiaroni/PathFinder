@@ -6,20 +6,52 @@ import { CardAtividade } from "@/components/CardAtividade";
 import { usuarioStore } from "@/store/usuarioStore";
 import { Calendar, MapPin, Pencil, Plus, Save, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const RoteiroSalvo = observer(() => {
   const router = useRouter();
   const params = useParams();
-  const { cidade } = params;
+
+  const pathName = usePathname();
+
+  const resolvedSlug = params.slug || pathName.split("/")[2];
 
   const [roteiro, setRoteiro] = useState(null);
   const [loading, setLoading] = useState(true);
   const [roteiroEditavel, setRoteiroEditavel] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState(null);
+
+  const fetchRoteiro = async (slug) => {
+    if (!usuarioStore.usuario?.id) {
+      toast.error("Você precisa estar logado para ver este roteiro.");
+      router.push("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/roteiro/${slug}?usuarioId=${usuarioStore.usuario.id}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Status 200 Recebido. Dados:", data);
+        setRoteiro(data);
+        setRoteiroEditavel(data);
+      } else {
+        toast.error("Roteiro não encontrado.");
+        router.push("/meus-roteiros");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar o roteiro:", error);
+      toast.error("Ocorreu um erro ao carregar o roteiro.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -45,37 +77,23 @@ const RoteiroSalvo = observer(() => {
     fetchImage();
   }, [roteiro]);
 
-  const fetchRoteiro = useCallback(async () => {
-    if (!usuarioStore.usuario?.id) {
-      toast.error("Você precisa estar logado para ver este roteiro.");
-      router.push("/");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `/api/roteiro/${cidade}?usuarioId=${usuarioStore.usuario.id}`
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setRoteiro(data);
-        setRoteiroEditavel(data);
-      } else {
-        toast.error("Roteiro não encontrado.");
-        router.push("/meus-roteiros");
-      }
-    } catch (error) {
-      console.error("Erro ao buscar o roteiro:", error);
-      toast.error("Ocorreu um erro ao carregar o roteiro.");
-    } finally {
-      setLoading(false);
-    }
-  }, [cidade, router]);
-
   useEffect(() => {
-    fetchRoteiro();
-  }, [fetchRoteiro]);
+    if (
+      resolvedSlug &&
+      typeof resolvedSlug === "string" &&
+      resolvedSlug.length > 0
+    ) {
+      console.log(
+        "✅ SLUG RESOLVIDO POR PATHNAME. Iniciando fetch:",
+        resolvedSlug
+      );
+      fetchRoteiro(resolvedSlug);
+    } else {
+      console.error("❌ Falha crítica ao resolver o slug. Redirecionando.");
+      setLoading(false);
+      router.push("/meus-roteiros");
+    }
+  }, [resolvedSlug, router]);
 
   const handleSalvarAlteracoes = async () => {
     console.log("Dados a serem salvos: ", roteiroEditavel);

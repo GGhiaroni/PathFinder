@@ -1,6 +1,7 @@
 "use client";
 
 import { CardAtividade } from "@/components/CardAtividade";
+import { slugify } from "@/lib/slugify";
 import perfilStore from "@/store/perfilStore";
 import { usuarioStore } from "@/store/usuarioStore";
 import { selecionarBandeiraPais } from "@/utils/bandeirasEImagens";
@@ -37,9 +38,22 @@ const Roteiro = observer(() => {
       return;
     }
 
+    const tituloOriginal = perfilStore.roteiro.title;
+
+    const tituloCorrigido = tituloOriginal
+      .replace(/í/g, "i")
+      .replace(/á/g, "a")
+      .replace(/ó/g, "o")
+      .replace(/ã/g, "a")
+      .replace(/é/g, "e")
+      .replace(/ç/g, "c");
+
+    const slug = slugify(tituloCorrigido);
+
     const dadosParaSalvar = {
       usuarioId: usuarioStore.usuario.id,
       titulo: perfilStore.roteiro.title,
+      slug,
       dadosRoteiro: perfilStore.roteiro,
       paisDestino: perfilStore.paisDestinoEscolhido,
       dataInicio: perfilStore.dataInicio,
@@ -59,6 +73,7 @@ const Roteiro = observer(() => {
 
       if (response.ok) {
         toast.success("Roteiro salvo com sucesso!");
+        router.push("/meus-roteiros");
         setRoteiroJaSalvo(true);
       } else {
         const errorData = await response.json();

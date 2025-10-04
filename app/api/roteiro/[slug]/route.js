@@ -3,16 +3,26 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   try {
-    const { cidade } = await params;
+    const resolvedParams = await params;
 
-    const nomeParaBusca = cidade.replace(/-/g, " ");
+    const slug = resolvedParams.slug;
+
+    console.log(`Slug resolvido: "${slug}"`);
+    console.log(`Resolved Params:`, resolvedParams);
 
     const { searchParams } = new URL(request.url);
     const usuarioId = searchParams.get("usuarioId");
 
-    if (!cidade || !usuarioId) {
+    if (!slug || slug === "undefined" || !usuarioId) {
+      console.log("Erro 400: Slug ou usuarioId ausente.");
+      console.log(`Slug recebido: "${slug}"`);
+      console.log(`UsuarioId recebido: "${usuarioId}"`);
+
       return NextResponse.json(
-        { error: "Nome da cidade ou ID do usuário não fornecido." },
+        {
+          error:
+            "O slug do roteiro ou ID do usuário não foi fornecido na requisição.",
+        },
         { status: 400 }
       );
     }
@@ -22,10 +32,10 @@ export async function GET(request, { params }) {
     const query = `
         SELECT dados_roteiro, titulo, pais_destino, data_inicio, data_fim, total_dias
         FROM roteiros_salvos
-        WHERE usuario_id = $1 AND titulo ILIKE $2;
+        WHERE usuario_id = $1 AND slug = $2;
         `;
 
-    const result = await client.query(query, [usuarioId, `%${nomeParaBusca}%`]);
+    const result = await client.query(query, [usuarioId, slug]);
 
     client.release();
 

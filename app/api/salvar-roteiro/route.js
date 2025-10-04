@@ -6,6 +6,7 @@ export async function POST(request) {
     const {
       usuarioId,
       titulo,
+      slug,
       dadosRoteiro,
       paisDestino,
       dataInicio,
@@ -15,6 +16,7 @@ export async function POST(request) {
     if (
       !usuarioId ||
       !titulo ||
+      !slug ||
       !dadosRoteiro ||
       !paisDestino ||
       !dataInicio ||
@@ -41,11 +43,16 @@ export async function POST(request) {
 
     const client = await pool.connect();
 
-    const query = `INSERT INTO roteiros_salvos (usuario_id, titulo, dados_roteiro, pais_destino, data_criacao, data_inicio, data_fim, total_dias) VALUES ($1, $2, $3, $4, NOW(), $5, $6, $7) RETURNING id;`;
+    const query = `INSERT INTO roteiros_salvos
+    (usuario_id, titulo, slug, dados_roteiro, pais_destino,
+    data_criacao, data_inicio, data_fim, total_dias)
+    VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7, $8)
+    RETURNING id, slug, titulo;`;
 
     const values = [
       usuarioId,
       titulo,
+      slug,
       dadosRoteiro,
       paisDestino,
       dataInicioObjeto,
