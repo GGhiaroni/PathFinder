@@ -30,7 +30,7 @@ export async function GET(request, { params }) {
     const client = await pool.connect();
 
     const query = `
-        SELECT dados_roteiro, titulo, pais_destino, data_inicio, data_fim, total_dias
+        SELECT dados_roteiro, titulo, destino_escolhido, pais_destino, data_inicio, data_fim, total_dias
         FROM roteiros_salvos
         WHERE usuario_id = $1 AND slug = $2;
         `;

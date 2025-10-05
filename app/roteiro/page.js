@@ -56,6 +56,7 @@ const Roteiro = observer(() => {
       slug,
       dadosRoteiro: perfilStore.roteiro,
       paisDestino: perfilStore.paisDestinoEscolhido,
+      destinoEscolhido: perfilStore.destinoEscolhido,
       dataInicio: perfilStore.dataInicio,
       dataFim: perfilStore.dataFim,
     };

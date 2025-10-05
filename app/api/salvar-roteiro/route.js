@@ -8,6 +8,7 @@ export async function POST(request) {
       titulo,
       slug,
       dadosRoteiro,
+      destinoEscolhido,
       paisDestino,
       dataInicio,
       dataFim,
@@ -44,9 +45,9 @@ export async function POST(request) {
     const client = await pool.connect();
 
     const query = `INSERT INTO roteiros_salvos
-    (usuario_id, titulo, slug, dados_roteiro, pais_destino,
+    (usuario_id, titulo, slug, dados_roteiro, destino_escolhido, pais_destino,
     data_criacao, data_inicio, data_fim, total_dias)
-    VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7, $8)
+    VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, $8, $9)
     RETURNING id, slug, titulo;`;
 
     const values = [
@@ -54,6 +55,7 @@ export async function POST(request) {
       titulo,
       slug,
       dadosRoteiro,
+      destinoEscolhido,
       paisDestino,
       dataInicioObjeto,
       dataFimObjeto,

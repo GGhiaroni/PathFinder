@@ -158,12 +158,13 @@ const RoteiroSalvo = observer(() => {
             className="relative p-6 sm:p-8 flex justify-between items-center h-64 bg-cover bg-center bg-no-repeat transition-all duration-300"
             style={{ backgroundImage: `url(${backgroundImage || ""})` }}
           >
-            <div className="absolute inset-0 bg-black opacity-70"></div>
+            <div className="absolute inset-0 bg-black opacity-50"></div>
 
             <div className="relative z-10 flex flex-col justify-between items-start w-full h-full">
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-1 text-white drop-shadow-lg">
-                  {roteiro.titulo.replace("Roteiro em ", "")}
+                  {roteiro.destino_escolhido}
+                  {console.log(roteiro)}
                 </h1>
                 <p className="text-gray-200 text-sm mb-2 drop-shadow-lg">
                   {roteiro.titulo.replace("Roteiro em ", "")},{" "}
