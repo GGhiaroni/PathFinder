@@ -1,6 +1,10 @@
+"use client";
+
 import { Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const BotaoRedirectMeusRoteiros = () => {
+  const router = useRouter();
   return (
     <button
       onClick={() => router.push("/meus-roteiros")}
